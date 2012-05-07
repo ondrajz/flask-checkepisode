@@ -2,19 +2,6 @@ from checkepisode import app
 from flask.ext.sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
-
-"""class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
-    email = db.Column(db.String(120), unique=True)
-    #password = db.Column(db.String(128), unique=False)
-
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
-
-    def __repr__(self):
-        return '<User %r>' % self.username"""
         
 class Language(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,11 +13,6 @@ class Language(db.Model):
     def __repr__(self):
         return '<Language %r>' % self.caption
         
-genres = db.Table('genres',
-    db.Column('series_id', db.Integer, db.ForeignKey('series.id')),
-    db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'))
-)
-        
 class Network(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     caption = db.Column(db.String(40), unique=True, nullable=False)
@@ -40,6 +22,11 @@ class Network(db.Model):
 
     def __repr__(self):
         return '<Network %r>' % self.caption
+        
+genres = db.Table('genres',
+    db.Column('series_id', db.Integer, db.ForeignKey('series.id')),
+    db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'))
+)
         
 class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,7 +58,6 @@ class Series(db.Model):
     first_aired = db.Column(db.String(8))
     airs_dow = db.Column(db.String(2))
     airs_time = db.Column(db.String(7))
-    #genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'))
     genre = db.relationship('Genre', secondary=genres,
         backref=db.backref('series', lazy='dynamic'))
     imdb_id = db.Column(db.String(10))
@@ -93,17 +79,10 @@ class Series(db.Model):
     def __repr__(self):
         return '<Series %s>' % self.name
         
-    """@property
-    def first_aired(self):
-        if not isinstance(self._first_aired, unicode):
-            return self._first_aired
-        return datetime.strptime(self._first_aired, '%Y-%m-%d %H:%M:%S.%f')"""
-        
 class Episode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
     tvdb_id = db.Column(db.Integer, unique=True, nullable=False)
-    #tvdb_series_id = dbColumn(db.Integeger, nullable=False)
     series_id = db.Column(db.Integer, db.ForeignKey('series.id'))
     series = db.relationship('Series',
         backref=db.backref('episodes', lazy='dynamic'))
@@ -120,9 +99,3 @@ class Episode(db.Model):
 
     def __repr__(self):
         return '<Episode %r(%d)>' % self.name,self.tvdb_id
-        
-    """@property
-    def air_time(self):
-        if not isinstance(self._air_time, unicode):
-            return self._air_time
-        return datetime.strptime(self._air_time, '%Y-%m-%d %H:%M:%S.%f')"""
