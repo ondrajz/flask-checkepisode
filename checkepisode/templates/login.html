@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Log in
+{% endblock %}
+
+{% block content %}
+  <form method="POST" action="" class="form-horizontal">
+    <fieldset>
+      <legend>
+        Log in
+      </legend>
+      <div class="control-group">
+        <label class="control-label" for="username">Username:</label>
+        <div class="controls">
+          <input type="text" class="span10" name="username" style="width: 200px;">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="password">Password:</label>
+        <div class="controls">
+          <input type="password" class="span10" name="password" style="width: 200px;">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Log in</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

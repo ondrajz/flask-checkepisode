@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<!-- Masthead
+    ================================================== -->
+    <legend>
+        Upcoming episodes
+    </legend>
+    <header id="overview" class="jumbotron subhead">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Series</th>
+                <th>Number</th>
+                <th>Episode name</th>
+                <th>Time till</th>
+                <th>Air time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ep in episodes %}
+                <tr>
+                    <td>{{ ep.series.name }}</td>
+                    <td>S00E00</td>
+                    <td>{{ ep.name }}</td>
+                    <td>1 day to go</td>
+                    <td>{{ ep.air_time }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </header>
+<hr>
+<!-- Footer
+    ================================================== -->
+    <footer class="footer">
+    <p>CheckEpisode.com © Copyright 2012</p>
+    </footer>
+
+</div>
+{% endblock %}`
