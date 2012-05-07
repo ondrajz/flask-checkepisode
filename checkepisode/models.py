@@ -1,7 +1,6 @@
 from checkepisode import app
 from flask.ext.sqlalchemy import SQLAlchemy
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:phoenix@localhost/tvchecker'
 db = SQLAlchemy(app)
 
 """class User(db.Model):
@@ -94,6 +93,12 @@ class Series(db.Model):
     def __repr__(self):
         return '<Series %s>' % self.name
         
+    """@property
+    def first_aired(self):
+        if not isinstance(self._first_aired, unicode):
+            return self._first_aired
+        return datetime.strptime(self._first_aired, '%Y-%m-%d %H:%M:%S.%f')"""
+        
 class Episode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
@@ -115,3 +120,9 @@ class Episode(db.Model):
 
     def __repr__(self):
         return '<Episode %r(%d)>' % self.name,self.tvdb_id
+        
+    """@property
+    def air_time(self):
+        if not isinstance(self._air_time, unicode):
+            return self._air_time
+        return datetime.strptime(self._air_time, '%Y-%m-%d %H:%M:%S.%f')"""

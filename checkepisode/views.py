@@ -6,9 +6,21 @@ from datetime import date
 
 today = date.today()
 
+@app.context_processor
+def utility_processor():
+    def pad_zeroes(number):
+        return u'%02d' % number
+    return dict(pad_zeroes=pad_zeroes)
+    
+@app.context_processor
+def utility_processor():
+    def date_string(date):
+        return date.strftime('%a %Y-%m-%d')
+    return dict(date_string=date_string)
+
 @app.route('/')
 def hello():
-    episodes = Episode.query.filter(Episode.air_time>today.strftime("%Y%m%d")).order_by(Episode.air_time)
+    episodes = Episode.query.filter(Episode.air_time>today.strftime('%Y%m%d')).order_by(Episode.air_time)
     return render_template('home.html', episodes=episodes)
     
 @app.route('/series/<int:id>')

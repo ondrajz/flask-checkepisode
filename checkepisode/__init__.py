@@ -3,6 +3,7 @@ from flask import Flask
 app = Flask(__name__)
 app.config.from_object('config')
 
+import friendly_time
 import views
 import models
 import login

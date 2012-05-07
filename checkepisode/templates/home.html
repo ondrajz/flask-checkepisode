@@ -27,10 +27,10 @@
             {% for ep in episodes %}
                 <tr>
                     <td>{{ ep.series.name }}</td>
-                    <td>S00E00</td>
+                    <td>S{{ pad_zeroes(ep.seas_num) }}E{{ pad_zeroes(ep.epis_num) }}</td>
                     <td>{{ ep.name }}</td>
-                    <td>1 day to go</td>
-                    <td>{{ ep.air_time }}</td>
+                    <td>{{ ep.air_time|to_date|friendly_time }}</td>
+                    <td>{{ date_string(ep.air_time|to_date) }}</td>
                 </tr>
             {% endfor %}
         </tbody>
