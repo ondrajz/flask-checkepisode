@@ -1,2 +1,2 @@
-import tvchecker
-tvchecker.run()
+import checkepisode
+checkepisode.run()

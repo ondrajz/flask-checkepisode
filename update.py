@@ -1,4 +1,4 @@
-from tvchecker.models import *
+from checkepisode.models import *
 from updater import *
 import os, sys
 import urllib

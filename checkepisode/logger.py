@@ -1,4 +1,4 @@
-from tvchecker import app
+from checkepisode import app
 import logging
 
 file_path = app.config['LOG_FILE_PATH']

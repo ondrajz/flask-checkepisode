@@ -1,4 +1,4 @@
-from tvchecker.models import *
+from checkepisode.models import *
 from xml.etree import ElementTree as et
 
 MIRROR = "http://www.thetvdb.com/"

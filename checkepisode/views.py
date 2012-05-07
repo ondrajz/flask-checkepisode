@@ -1,5 +1,5 @@
-from tvchecker import app
-from tvchecker.models import *
+from checkepisode import app
+from checkepisode.models import *
 from flask import abort, render_template, request, redirect, \
     url_for, g, flash, session
 from datetime import date

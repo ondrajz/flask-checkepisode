@@ -1,7 +1,7 @@
 from flask import session, request, redirect, url_for, g, render_template, \
         flash, jsonify
-from tvchecker import app
-from tvchecker.models import *
+from checkepisode import app
+from checkepisode.models import *
 from users import User
 from sqlalchemy.orm.exc import NoResultFound
 

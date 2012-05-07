@@ -1,4 +1,4 @@
-from tvchecker import app
+from checkepisode import app
 from flask.ext.sqlalchemy import SQLAlchemy
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:phoenix@localhost/tvchecker'

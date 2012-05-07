@@ -1,4 +1,4 @@
-from tvchecker.models import db,Series
+from checkepisode.models import db,Series
 
 shows = open('shows','r')
 for line in shows.readlines():

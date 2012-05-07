@@ -1,5 +1,5 @@
-from tvchecker import app
-from tvchecker.models import *
+from checkepisode import app
+from checkepisode.models import *
 from flask.ext.sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
 
