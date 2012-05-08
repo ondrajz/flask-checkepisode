@@ -101,6 +101,7 @@ class Series(db.Model):
     status = db.relationship('Status',
         backref=db.backref('series', lazy='dynamic'))
     last_update = db.Column(db.Integer)
+    banner = dbColumn(db.String(40))
 
     def __init__(self, name):
         self.name = name
@@ -122,6 +123,7 @@ class Episode(db.Model):
     tvdb_rating = db.Column(db.Float)
     tvdb_ratecount = db.Column(db.Integer)
     last_update = db.Column(db.Integer)
+    graphic = db.Column(db.String(40))
 
     def __init__(self, epID):
         self.tvdb_id = epID
