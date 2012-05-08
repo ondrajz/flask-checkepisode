@@ -77,8 +77,7 @@ def getAllInfo(series):
             print "\nFound %d episodes" % len(xmlEpisodes)
             for xmlEpisode in xmlEpisodes:
                 updateEpisode(xmlEpisode)
-        print "\nRetrieving info finished"
-        print "------------------------------------------------"
+        print "\nRetrieving info finished\n"
 
 series = Series.query.all()
 print "Checking %d series for missing id\n" % len(series)
@@ -94,5 +93,5 @@ for s in series:
             getAllInfo(s)
             print "Committing to database.."
             db.session.commit()
-        print "------------------------------------------------"
+        print "------------------------------------------------\n"
 print "Checking series finished"

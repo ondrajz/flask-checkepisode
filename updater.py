@@ -1,12 +1,16 @@
 from checkepisode.models import *
 from xml.etree import ElementTree as et
 from datetime import datetime
+import os
+import urllib
 
 MIRROR = "http://www.thetvdb.com/"
 API_KEY = "4E5D5C8EFC4175A1"
 REMOVE_OLD = False
 INSTANT_COMMIT = False
 PRINT_COLUMN_DETAIL = INSTANT_COMMIT
+REMOVE_OLD_IMAGES = False
+IMAGE_FOLDER = "checkepisode/static/"
 
 def getLanguage_id(lang):
     old = Language.query.filter_by(caption=lang).first()
@@ -138,7 +142,18 @@ def updateSeries(series, xmlSeries):
         if banner:
             if PRINT_COLUMN_DETAIL: print "Saving banner.."
             series.banner = banner
-            if INSTANT_COMMIT: db.session.commit() 
+            image_file = "%s%s" % (IMAGE_FOLDER, banner)
+            dir_path = os.path.dirname(image_file)
+            if not os.path.exists(dir_path):
+                print "Creating %s" % dir_path
+                os.makedirs(dir_path)
+            if os.path.isfile(image_file) and REMOVE_OLD_IMAGES:
+                if PRINT_COLUMN_DETAIL: print "Removing old banner"
+                os.remove(image_file)
+            if not os.path.isfile(image_file):
+                if PRINT_COLUMN_DETAIL: print "Downloading banner"
+                urllib.urlretrieve('%sbanners/%s' % (MIRROR, banner), image_file)
+            if INSTANT_COMMIT: db.session.commit()
         # -----------------------
     
 def getEpisode(epID, serID):
@@ -219,6 +234,17 @@ def updateEpisode(xmlEpisode):
                 if graphic:
                     if PRINT_COLUMN_DETAIL: print "Saving graphic.."
                     episode.graphic = graphic
+                    image_file = "%s%s" % (IMAGE_FOLDER, graphic)
+                    dir_path = os.path.dirname(image_file)
+                    if not os.path.exists(dir_path):
+                        print "Creating %s" % dir_path
+                        os.makedirs(dir_path)
+                    if os.path.isfile(image_file) and REMOVE_OLD_IMAGES:
+                        if PRINT_COLUMN_DETAIL: print "Removing old graphic"
+                        os.remove(image_file)
+                    if not os.path.isfile(image_file):
+                        if PRINT_COLUMN_DETAIL: print "Downloading graphic"
+                        urllib.urlretrieve('%sbanners/%s' % (MIRROR, graphic), image_file)
                     if INSTANT_COMMIT: db.session.commit() 
                 # -----------------------
             else:

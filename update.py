@@ -40,7 +40,7 @@ for s in series_updates:
         updateSeries(series, getSeriesXml(s.text))
     else:
         print "Series not in database"
-        
+
 for e in episode_updates:
     print "---------------------------------------"
     #print "Checking episode, id = %s" % e.text
