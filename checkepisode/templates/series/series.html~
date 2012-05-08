@@ -19,7 +19,7 @@ td.table-top {
     </div>
     <div class="row">
         <div class="span8">
-            <p><img src="/static/{{ series.banner }}" alt="{{ series.name }}"></p>
+            <img src="/static/{{ series.banner }}" alt="{{ series.name }}">
             <h3>Overview:</h3>
             <p>{{ series.overview }}</p>
         </div>

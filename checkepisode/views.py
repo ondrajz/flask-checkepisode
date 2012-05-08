@@ -26,10 +26,15 @@ def utility_processor():
 
 @app.route('/')
 def hello():
-    episodes = Episode.query.filter(Episode.air_time>today.strftime('%Y%m%d')).order_by(Episode.air_time)
+    episodes = Episode.query.filter(Episode.air_time>=today.strftime('%Y%m%d')).order_by(Episode.air_time)
     return render_template('home.html', episodes=episodes)
     
 @app.route('/series/<int:id>')
 def showSeries(id):
     series = Series.query.get_or_404(id)
     return render_template('series/series.html', series=series)
+    
+@app.route('/episode/<int:id>')
+def showEpisode(id):
+    episode = Episode.query.get_or_404(id)
+    return render_template('episode/episode.html', episode=episode)

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+<!-- Masthead
+    ================================================== -->
+    <div class="page-header">
+        <h1>
+        {{ episode.name }}
+        </h1>
+    </div>
+    <div class="row">
+        <div class="span8">
+            {% if episode.graphic %}
+                <p><img src="/static/{{ episode.graphic }}" alt="{{ episode.name }}"></p>
+            {% endif %}
+            <h3>Overview:</h3>
+            <p>{{ episode.overview }}</p>
+        </div>
+        <div class="span4">
+            <div class="well">
+                <table class="table" style="margin-bottom: 0;">
+                    <tbody>
+                        <tr>
+                            <td class="table-top"><b>Airing:</b></td>
+                            <td class="table-top">{{ episode.air_time|to_date|friendly_time }}</td>
+                        </tr><tr>
+                            <td><b>Number:</b></td>
+                            <td>S{{ pad_zeroes(episode.seas_num) }}E{{ pad_zeroes(episode.epis_num) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+<hr>
+<!-- Footer
+    ================================================== -->
+    <footer class="footer">
+    <p>CheckEpisode.com © Copyright 2012</p>
+    </footer>
+
+</div>
+{% endblock %}`

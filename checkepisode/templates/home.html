@@ -1,34 +1,32 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
-
 {% endblock %}
 
 {% block content %}
 <div class="container">
-
 <!-- Masthead
     ================================================== -->
     <legend>
         Upcoming episodes
     </legend>
-    <header id="overview" class="jumbotron subhead">
+    <header class="jumbotron subhead">
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Series</th>
                 <th>Number</th>
                 <th>Episode name</th>
-                <th>Time till</th>
+                <th>Remaining</th>
                 <th>Air time</th>
             </tr>
         </thead>
         <tbody>
             {% for ep in episodes %}
                 <tr>
-                    <td>{{ ep.series.name }}</td>
+                    <td><a href="/series/{{ ep.series.id }}"><b>{{ ep.series.name }}</b></a></td>
                     <td>S{{ pad_zeroes(ep.seas_num) }}E{{ pad_zeroes(ep.epis_num) }}</td>
-                    <td>{{ ep.name }}</td>
+                    <td><a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
                     <td>{{ ep.air_time|to_date|friendly_time }}</td>
                     <td>{{ date_string(ep.air_time|to_date) }}</td>
                 </tr>

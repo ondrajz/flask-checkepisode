@@ -10,37 +10,32 @@ td.table-top {
 
 {% block content %}
 <div class="container">
+
 <!-- Masthead
     ================================================== -->
     <div class="page-header">
         <h1>
-        {{ series.name }}
+        {{ episode.name }}
         </h1>
     </div>
     <div class="row">
         <div class="span8">
-            <p><img src="/static/{{ series.banner }}" alt="{{ series.name }}"></p>
+            {% if episode.graphic %}
+                <p><img src="/static/{{ episode.graphic }}" alt="{{ episode.name }}"></p>
+            {% endif %}
             <h3>Overview:</h3>
-            <p>{{ series.overview }}</p>
+            <p>{{ episode.overview }}</p>
         </div>
         <div class="span4">
             <div class="well">
                 <table class="table" style="margin-bottom: 0;">
                     <tbody>
                         <tr>
-                            <td class="table-top"><b>Status:</b></td>
-                            <td class="table-top">{% if series.status.caption == "Continuing" %}
-                                <span style="margin-left: 0;" class="label label-success">Continuing</span>
-                            {% endif %}</td>
+                            <td class="table-top"><b>Airing:</b></td>
+                            <td class="table-top">{{ episode.air_time|to_date|friendly_time }}</td>
                         </tr><tr>
-                            <td><b>Started airing:</b></td>
-                            <td>{{ date_string_my(series.first_aired|to_date) }}</td>
-                        </tr><tr>
-                            <td><b>Language:</b></td>
-                            <td>{{ series.language.caption }}</td>
-                        </tr><tr>
-                            <td><b>Episodes:</b></td>
-                            <td>{{ series.episodes.count() }}</td>
+                            <td><b>Number:</b></td>
+                            <td>S{{ pad_zeroes(episode.seas_num) }}E{{ pad_zeroes(episode.epis_num) }}</td>
                         </tr>
                     </tbody>
                 </table>
