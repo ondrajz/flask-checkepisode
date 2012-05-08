@@ -133,6 +133,12 @@ def updateSeries(series, xmlSeries):
             if PRINT_COLUMN_DETAIL: print "Saving last update.."
             series.last_update = last
             if INSTANT_COMMIT: db.session.commit() 
+        # = = =
+        banner = xmlSeries.findtext("banner")
+        if banner:
+            if PRINT_COLUMN_DETAIL: print "Saving banner.."
+            series.banner = banner
+            if INSTANT_COMMIT: db.session.commit() 
         # -----------------------
     
 def getEpisode(epID, serID):
@@ -207,6 +213,12 @@ def updateEpisode(xmlEpisode):
                 if last_update:
                     if PRINT_COLUMN_DETAIL: print "Saving last update.."
                     episode.last_update = last_update
+                    if INSTANT_COMMIT: db.session.commit() 
+                # = = =
+                graphic = xmlEpisode.findtext("filename")
+                if graphic:
+                    if PRINT_COLUMN_DETAIL: print "Saving graphic.."
+                    episode.graphic = graphic
                     if INSTANT_COMMIT: db.session.commit() 
                 # -----------------------
             else:
