@@ -17,6 +17,12 @@ def utility_processor():
     def date_string(date):
         return date.strftime('%a %Y-%m-%d')
     return dict(date_string=date_string)
+    
+@app.context_processor
+def utility_processor():
+    def date_string_my(date):
+        return date.strftime('%B %Y')
+    return dict(date_string_my=date_string_my)
 
 @app.route('/')
 def hello():
