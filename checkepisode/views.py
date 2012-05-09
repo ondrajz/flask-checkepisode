@@ -53,9 +53,9 @@ def index():
 @app.route('/series/<int:id>')
 def showSeries(id):
     series = Series.query.get_or_404(id)
-    return render_template('series/series.html', series=series)
+    return render_template('series/detail.html', series=series)
     
 @app.route('/episode/<int:id>')
 def showEpisode(id):
     episode = Episode.query.get_or_404(id)
-    return render_template('episode/episode.html', episode=episode)
+    return render_template('episode/detail.html', episode=episode)
