@@ -26,3 +26,11 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+real_config.py
+seriesZip/
+log.log
+shows
+lastupdate
+checkepisode/static/episodes/
+checkepisode/static/graphical/
