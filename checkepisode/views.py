@@ -4,6 +4,7 @@ from flask import abort, render_template, request, redirect, \
     url_for, g, flash, session
 from datetime import date, timedelta, datetime
 import urllib
+from sqlalchemy.sql import func
 
 today = date.today()
 
@@ -53,7 +54,9 @@ def index():
 @app.route('/series/<int:id>')
 def showSeries(id):
     series = Series.query.get_or_404(id)
-    return render_template('series/detail.html', series=series)
+    seasCount = db.session.query(func.max(Episode.seas_num)).filter(Episode.series==series).scalar()
+    last_season = Episode.query.filter_by(series=series, seas_num=seasCount)
+    return render_template('series/detail.html', series=series, seasCount=seasCount, last_season=last_season, today=today.strftime('%Y%m%d'))
     
 @app.route('/episode/<int:id>')
 def showEpisode(id):
