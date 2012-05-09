@@ -4,7 +4,6 @@ from checkepisode import app
 from checkepisode.models import *
 from sqlalchemy.orm.exc import NoResultFound
 
-
 @app.errorhandler(403)
 def require_login(error):
     if g.json:

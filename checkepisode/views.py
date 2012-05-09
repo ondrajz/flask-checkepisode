@@ -5,8 +5,17 @@ from flask import abort, render_template, request, redirect, \
 from datetime import date, timedelta, datetime
 import urllib
 from sqlalchemy.sql import func
+from functools import wraps
 
 today = date.today()
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.template_filter()
 def safe_url(url):
@@ -54,11 +63,16 @@ def index():
 @app.route('/series/<int:id>')
 def showSeries(id):
     series = Series.query.get_or_404(id)
-    seasCount = db.session.query(func.max(Episode.seas_num)).filter(Episode.series==series).scalar()
-    last_season = Episode.query.filter_by(series=series, seas_num=seasCount)
-    return render_template('series/detail.html', series=series, seasCount=seasCount, last_season=last_season, today=today.strftime('%Y%m%d'))
+    seasonCount = db.session.query(func.max(Episode.seas_num)).filter(Episode.series==series).scalar()
+    try:
+        season = int(request.args.get('season', seasonCount))
+    except:
+        season = seasonCount
+    season_list = Episode.query.filter_by(series=series, seas_num=season)
+    return render_template('series/detail.html', series=series, seasonCount=seasonCount, season=season, season_list=season_list, today=today.strftime('%Y%m%d'))
     
 @app.route('/episode/<int:id>')
+@login_required
 def showEpisode(id):
     episode = Episode.query.get_or_404(id)
     return render_template('episode/detail.html', episode=episode)
