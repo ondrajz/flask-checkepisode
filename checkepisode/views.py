@@ -2,9 +2,18 @@ from checkepisode import app
 from checkepisode.models import *
 from flask import abort, render_template, request, redirect, \
     url_for, g, flash, session
-from datetime import date
+from datetime import date, timedelta, datetime
+import urllib
 
 today = date.today()
+
+@app.template_filter()
+def safe_url(url):
+    return urllib.quote(url)
+
+@app.template_filter()
+def to_date(dt):
+    return datetime.strptime(dt, '%Y%m%d')
 
 @app.context_processor
 def utility_processor():
@@ -23,11 +32,23 @@ def utility_processor():
     def date_string_my(date):
         return date.strftime('%B %Y')
     return dict(date_string_my=date_string_my)
+    
+@app.context_processor
+def utility_processor():
+    def epNum(sNum, eNum):
+        try:
+            s = int(sNum)
+            e = int(eNum)
+        except:
+            return u'S%02sE%02s' % (sNum, eNum)
+        return u'S%02dE%02d' % (s, e)
+    return dict(epNum=epNum)
 
 @app.route('/')
-def hello():
-    episodes = Episode.query.filter(Episode.air_time>=today.strftime('%Y%m%d')).order_by(Episode.air_time)
-    return render_template('home.html', episodes=episodes)
+def index():
+    t = date.today() - timedelta(days=7)
+    episodes = Episode.query.filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
+    return render_template('home.html', episodes=episodes, today=today.strftime('%Y%m%d'))
     
 @app.route('/series/<int:id>')
 def showSeries(id):

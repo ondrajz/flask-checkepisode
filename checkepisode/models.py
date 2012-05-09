@@ -18,6 +18,7 @@ watched_episodes = db.Table('watched_episodes',
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(35), unique=True)
+    email = db.Column(db.String(60), unique=True)
     password = db.Column(db.String(128))
     favorite_series = db.relationship('Series', secondary=favorite_series,
         backref=db.backref('users', lazy='dynamic'))

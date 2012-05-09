@@ -5,28 +5,26 @@
 {% endblock %}
 
 {% block content %}
-  <form method="POST" action="" class="form-horizontal">
-    <fieldset>
-      <legend>
-        Log in
-      </legend>
-      <div class="control-group">
-        <label class="control-label" for="username">Username:</label>
-        <div class="controls">
-          <input type="text" class="span10" name="username" style="width: 200px;">
+<div class="span11">
+    <div class="row">
+        <div class="span4 offset3">
+            <h2>Log in</h2>
+            <form method="POST" action="" class="well">
+                    <label class="control-label" for="username">Username:</label>
+                    <div class="controls">
+                        <input type="text" class="span10" name="username" style="width: 200px;">
+                    </div>
+                    <label class="control-label" for="password">Password:</label>
+                    <div class="controls">
+                        <input type="password" class="span10" name="password" style="width: 200px;">
+                    </div>
+                    <hr class="soften" style="margin: 10px 0;">
+                    <div class="controls" >
+                        <button class="btn btn-primary" type="submit">Log in</button>
+                    </div>
+            </form>
         </div>
-      </div>
-
-      <div class="control-group">
-        <label class="control-label" for="password">Password:</label>
-        <div class="controls">
-          <input type="password" class="span10" name="password" style="width: 200px;">
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button class="btn btn-primary" type="submit">Log in</button>
-      </div>
-    </fieldset>
-  </form>
+    </div>
+</div>
+<br>
 {% endblock %}

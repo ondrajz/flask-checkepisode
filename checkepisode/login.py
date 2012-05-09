@@ -2,7 +2,6 @@ from flask import session, request, redirect, url_for, g, render_template, \
         flash, jsonify
 from checkepisode import app
 from checkepisode.models import *
-from users import User
 from sqlalchemy.orm.exc import NoResultFound
 
 
@@ -15,18 +14,15 @@ def require_login(error):
     flash('You need to be logged in to view that content.', 'error')
     return redirect(url_for('login'))
 
-
 @app.before_request
 def load_user():
     g.user = None
-
     if 'user-id' in session:
         try:
             g.user = User.query.filter_by(id=session['user-id']).one()
         except db.NoResultFound:
             app.logger.error("Session's user id \"%s\" does not exist",
                     session['user-id'])
-
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():

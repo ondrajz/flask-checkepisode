@@ -41,7 +41,3 @@ def friendly_time(dt, past_="ago",
                 past_ if dt_is_past else future_)
 
     return default
-
-@app.template_filter()
-def to_date(dt):
-    return datetime.strptime(dt, '%Y%m%d')
