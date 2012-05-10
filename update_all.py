@@ -64,7 +64,6 @@ def getInfoFile(ser_id):
     
 def getAllInfo(series):
     if series:
-        print "------------------------------------------------"
         print "Retrieving all info about %d\n" % series.tvdb_id
         info = getInfoFile(series.tvdb_id)
         if os.path.isfile(info):
@@ -84,6 +83,7 @@ print "Checking %d series for missing id\n" % len(series)
 for s in series:
     print "Checking %s" % s.name
     if not s.tvdb_id:
+        print "------------------------------------------------"
         print "Missing ID"
         newId = getIdFor(s.name)
         if newId:
