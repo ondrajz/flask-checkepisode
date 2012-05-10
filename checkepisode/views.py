@@ -5,17 +5,9 @@ from flask import abort, render_template, request, redirect, \
 from datetime import date, timedelta, datetime
 import urllib
 from sqlalchemy.sql import func
-from functools import wraps
+from checkepisode.login import login_required
 
 today = date.today()
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if g.user is None:
-            return abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
 
 @app.template_filter()
 def safe_url(url):

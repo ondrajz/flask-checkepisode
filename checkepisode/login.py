@@ -1,8 +1,17 @@
 from flask import session, request, redirect, url_for, g, render_template, \
-        flash, jsonify
+        flash, jsonify, abort
 from checkepisode import app
 from checkepisode.models import *
 from sqlalchemy.orm.exc import NoResultFound
+from functools import wraps
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.errorhandler(403)
 def require_login(error):
@@ -52,7 +61,6 @@ def login():
             user.name, user.id)
     flash('You have logged in.', 'success')
     return redirect(url)
-
 
 @app.route('/logout')
 def logout():
