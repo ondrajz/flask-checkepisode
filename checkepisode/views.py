@@ -1,7 +1,7 @@
-from checkepisode import app
+from checkepisode import app, create_token, validate_token
 from checkepisode.models import *
 from flask import abort, render_template, request, redirect, \
-    url_for, g, flash, session
+    url_for, g, flash, session, abort
 from datetime import date, timedelta, datetime
 import urllib
 from sqlalchemy.sql import func
@@ -13,7 +13,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if g.user is None:
-            return redirect(url_for('login', next=request.url))
+            return abort(403)
         return f(*args, **kwargs)
     return decorated_function
 
@@ -56,12 +56,14 @@ def utility_processor():
 
 @app.route('/')
 def index():
+    create_token()
     t = date.today() - timedelta(days=7)
     episodes = Episode.query.filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
     return render_template('home.html', episodes=episodes, today=today.strftime('%Y%m%d'))
     
 @app.route('/series/<int:id>')
 def showSeries(id):
+    create_token()
     series = Series.query.get_or_404(id)
     seasonCount = db.session.query(func.max(Episode.seas_num)).filter(Episode.series==series).scalar()
     try:
@@ -74,5 +76,6 @@ def showSeries(id):
 @app.route('/episode/<int:id>')
 @login_required
 def showEpisode(id):
+    create_token()
     episode = Episode.query.get_or_404(id)
     return render_template('episode/detail.html', episode=episode)
