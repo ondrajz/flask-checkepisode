@@ -11,7 +11,13 @@ for line in shows.readlines():
         db.session.add(new)
 shows.close()
 
+db.session.commit()
+
 admin = User('admin', 'admin')
+ser = []
+ser.append(Series.query.get(1))
+ser.append(Series.query.get(16))
+admin.favorite_series = ser
 db.session.add(admin)
 
 db.session.commit()
