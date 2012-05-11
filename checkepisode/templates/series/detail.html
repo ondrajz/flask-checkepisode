@@ -5,6 +5,21 @@
 td.table-top {
     border-top: none;
 }
+a.new-checkbox-checked {
+    background: url("/static/img/checkbox.png") no-repeat scroll 0 -64px transparent;
+    height: 32px;
+    width: 32px;
+    display: block;
+}
+a.new-checkbox-unchecked {
+    background: url("/static/img/checkbox.png") no-repeat scroll 0 0 transparent;
+    height: 32px;
+    width: 32px;
+    display: block;
+}
+a.new-checkbox-unchecked:hover {
+    background-position: 0 -32px;
+}
 </style>
 {% endblock %}
 
@@ -23,8 +38,11 @@ td.table-top {
             <table class="table" style="margin-bottom: 0;">
                 <tbody>
                     <tr>
-                        <td class="table-top"><b>Status:</b></td>
-                        <td class="table-top">{% if series.status.caption == "Continuing" %}
+                        <td class="table-top" style="vertical-align: middle;"><b>Watchlist:</b></td>
+                        <td class="table-top" style="padding-left: 0;"><a {% if g.user and series in g.user.favorite_series %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %} href="/series/{{ series.id }}/add"></a><img src="/static/img/loading.gif" style="display: none;"></td>
+                    </tr><tr>
+                        <td><b>Status:</b></td>
+                        <td>{% if series.status.caption == "Continuing" %}
                             <span style="margin-left: 0;" class="label label-success">{{ series.status.caption }}</span>
                         {% endif %}</td>
                     </tr><tr>
@@ -45,7 +63,7 @@ td.table-top {
         </div>
     </div>
 </div>
-    <hr class="soften">
+<hr class="soften">
 <div class="row">
     <div class="span12">
     <div class="tabbable">
@@ -59,7 +77,8 @@ td.table-top {
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Episode name</th>
+                            <th>Episode</th>
+                            <th>Overview</th>
                             <th>Time</th>
                             <th>Air time</th>
                             <th>Search</th>
@@ -68,8 +87,16 @@ td.table-top {
                     <tbody>
                         {% for ep in season_list %}
                             <tr>
-                                <td>{{ ep.epis_num }}. <a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
-                                <td>
+                                <td>{{ ep.epis_num }}. <a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td><td>
+                                {% if ep.overview %}
+                                    {{ ep.overview|truncate(200) }}
+                                    {% if ep.overview|length > 210 %}
+                                        <a href="/episode/{{ ep.id }}">read more</a>
+                                    {% endif %}
+                                {% else %}
+                                    No overview.
+                                {% endif %}
+                                </td><td>
                                 {% if ep.air_time %}
                                     {% if ep.air_time<today %}
                                     <span style="margin-left: 0;" class="label label-success">{{ ep.air_time|to_date|friendly_time }}</span>

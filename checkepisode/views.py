@@ -66,8 +66,31 @@ def showSeries(id):
     return render_template('series/detail.html', series=series, seasonCount=seasonCount, season=season, season_list=season_list, today=today.strftime('%Y%m%d'))
     
 @app.route('/episode/<int:id>')
-@login_required
 def showEpisode(id):
     create_token()
     episode = Episode.query.get_or_404(id)
     return render_template('episode/detail.html', episode=episode)
+    
+@app.route('/series/<int:id>/add', methods=('GET', 'POST'))
+@login_required
+def addSeries(id):
+    series = Series.query.get_or_404(id)
+    
+    if request.method == 'GET':
+        create_token()
+        return render_template('series/add.html', series=series)
+    
+    if not validate_token():
+        return redirect(url_for('addSeries', id=series.id))
+    
+    add = request.form.get('add', None)
+    if add:
+        if series not in g.user.favorite_series:
+            g.user.favorite_series.append(series)
+            flash('Added to watchlist!', 'success')
+    else:
+        g.user.favorite_series.remove(series)
+        flash('Removed from watchlist!', 'success')
+    db.session.commit()
+    
+    return redirect(url_for('showSeries', id=series.id))
