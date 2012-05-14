@@ -4,7 +4,7 @@ from flask import abort, render_template, request, redirect, \
     url_for, g, flash, session, abort
 from datetime import date, timedelta, datetime
 import urllib
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, tuple_, or_
 from checkepisode.login import login_required
 
 today = date.today()
@@ -26,7 +26,7 @@ def utility_processor():
 @app.context_processor
 def utility_processor():
     def date_string(date):
-        return date.strftime('%a %Y-%m-%d')
+        return date.strftime('%a %Y-%m-%d %H:%M')
     return dict(date_string=date_string)
     
 @app.context_processor
@@ -50,8 +50,13 @@ def utility_processor():
 def index():
     create_token()
     t = date.today() - timedelta(days=7)
-    episodes = Episode.query.filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
-    return render_template('home.html', episodes=episodes, today=today.strftime('%Y%m%d'))
+    if g.user:
+        sids = [x.id for x in g.user.favorite_series]
+        episodes = Episode.query.filter(Episode.series_id.in_(sids)).filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
+        return render_template('watchlist.html', episodes=episodes, today=today.strftime('%Y%m%d'))
+    else:
+        episodes = Episode.query.filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
+        return render_template('home.html', episodes=episodes, today=today.strftime('%Y%m%d'))
     
 @app.route('/series/<int:id>')
 def showSeries(id):

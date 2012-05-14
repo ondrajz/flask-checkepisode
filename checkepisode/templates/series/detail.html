@@ -99,16 +99,16 @@ a.new-checkbox-unchecked:hover {
                                 </td><td>
                                 {% if ep.air_time %}
                                     {% if ep.air_time<today %}
-                                    <span style="margin-left: 0;" class="label label-success">{{ ep.air_time|to_date|friendly_time }}</span>
+                                    <span style="margin-left: 0;" class="label label-success">{{ ep.runtime|friendly_time }}</span>
                                     {% else %}
-                                    <span style="margin-left: 0;" class="label label-warning">{{ ep.air_time|to_date|friendly_time }}</span>
+                                    <span style="margin-left: 0;" class="label label-warning">{{ ep.runtime|friendly_time }}</span>
                                     {% endif %}
                                 {% else %}
                                     Unknown
                                 {% endif %}
                                 </td><td>
                                 {% if ep.air_time %}
-                                    {{ date_string(ep.air_time|to_date) }}
+                                    {{ date_string(ep.runtime) }}
                                 {% else %}
                                     Unknown
                                 {% endif %}
