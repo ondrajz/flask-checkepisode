@@ -29,7 +29,7 @@
                         <td><a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
                         <td>
                         {% if ep.air_time %}
-                            <span style="margin-left: 0;" class="label {% if ep.air_time<today %}label-success{% else %}label-warning{% endif %}">{{ ep.runtime|friendly_time }}</span>
+                            <span style="margin-left: 0;" class="label {% if ep.runtime<today %}label-success{% else %}label-warning{% endif %}">{{ ep.runtime|friendly_time }}</span>
                         {% else %}
                             Unknown
                         {% endif %}

@@ -53,10 +53,10 @@ def index():
     if g.user:
         sids = [x.id for x in g.user.favorite_series]
         episodes = Episode.query.filter(Episode.series_id.in_(sids)).filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
-        return render_template('watchlist.html', episodes=episodes, today=today.strftime('%Y%m%d'))
+        return render_template('watchlist.html', episodes=episodes, today=datetime.now())
     else:
         episodes = Episode.query.filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
-        return render_template('home.html', episodes=episodes, today=today.strftime('%Y%m%d'))
+        return render_template('home.html', episodes=episodes, today=datetime.now())
     
 @app.route('/series/<int:id>')
 def showSeries(id):
