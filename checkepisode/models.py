@@ -1,5 +1,6 @@
 from checkepisode import app
 from flask.ext.sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy(app)
 
@@ -16,6 +17,7 @@ watched_episodes = db.Table('watched_episodes',
 )
 
 class User(db.Model):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(35), unique=True)
     email = db.Column(db.String(60), unique=True)
@@ -34,6 +36,7 @@ class User(db.Model):
         return pwd_context.verify(password, self.password)
         
 class Language(db.Model):
+    __tablename__ = 'language'
     id = db.Column(db.Integer, primary_key=True)
     caption = db.Column(db.String(2), unique=True, nullable=False)
 
@@ -44,6 +47,7 @@ class Language(db.Model):
         return '<Language %r>' % self.caption
         
 class Network(db.Model):
+    __tablename__ = 'network'
     id = db.Column(db.Integer, primary_key=True)
     caption = db.Column(db.String(40), unique=True, nullable=False)
 
@@ -53,12 +57,13 @@ class Network(db.Model):
     def __repr__(self):
         return '<Network %r>' % self.caption
         
-genres = db.Table('genres',
+series_genres = db.Table('series_genres',
     db.Column('series_id', db.Integer, db.ForeignKey('series.id')),
     db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'))
 )
         
 class Genre(db.Model):
+    __tablename__ = 'genre'
     id = db.Column(db.Integer, primary_key=True)
     caption = db.Column(db.String(40), unique=True, nullable=False)
 
@@ -69,6 +74,7 @@ class Genre(db.Model):
         return '<Genre %r>' % self.caption
     
 class Status(db.Model):
+    __tablename__ = 'status'
     id = db.Column(db.Integer, primary_key=True)
     caption = db.Column(db.String(20), unique=True, nullable=False)
 
@@ -79,6 +85,7 @@ class Status(db.Model):
         return '<Status %r>' % self.caption
         
 class Series(db.Model):
+    __tablename__ = 'series'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
     tvdb_id = db.Column(db.Integer, unique=True)
@@ -88,7 +95,7 @@ class Series(db.Model):
     first_aired = db.Column(db.String(8))
     airs_dow = db.Column(db.String(2))
     airs_time = db.Column(db.String(7))
-    genre = db.relationship('Genre', secondary=genres,
+    genre = db.relationship('Genre', secondary=series_genres,
         backref=db.backref('series', lazy='dynamic'))
     imdb_id = db.Column(db.String(10))
     network_id = db.Column(db.Integer, db.ForeignKey('network.id'))
@@ -111,12 +118,11 @@ class Series(db.Model):
         return '<Series %s>' % self.name
         
 class Episode(db.Model):
+    __tablename__ = 'episode'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
     tvdb_id = db.Column(db.Integer, unique=True, nullable=False)
     series_id = db.Column(db.Integer, db.ForeignKey('series.id'))
-    series = db.relationship('Series',
-        backref=db.backref('episodes', lazy='dynamic'))
     air_time = db.Column(db.String(8))
     seas_num = db.Column(db.Integer)
     epis_num = db.Column(db.Integer)
@@ -125,9 +131,18 @@ class Episode(db.Model):
     tvdb_ratecount = db.Column(db.Integer)
     last_update = db.Column(db.Integer)
     graphic = db.Column(db.String(40))
+    
+    series = db.relationship('Series',
+        backref=db.backref('episodes', lazy='dynamic'))
 
     def __init__(self, epID):
         self.tvdb_id = epID
 
     def __repr__(self):
-        return '<Episode %r(%d)>' % self.name,self.tvdb_id
+        return u'<Episode %d>' % self.tvdb_id
+        
+    @property
+    def runtime(self):
+        if not isinstance(self.air_time, unicode):
+            return self.air_time
+        return datetime.strptime('%s %s'%(self.air_time, self.series.airs_time), '%Y%m%d %I:%M%p')
