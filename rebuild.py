@@ -17,6 +17,9 @@ admin = User('admin', 'admin')
 ser = []
 ser.append(Series.query.get(1))
 ser.append(Series.query.get(16))
+ser.append(Series.query.get(8))
+ser.append(Series.query.get(3))
+ser.append(Series.query.get(12))
 admin.favorite_series = ser
 db.session.add(admin)
 
