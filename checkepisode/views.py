@@ -82,15 +82,13 @@ def showEpisode(id):
     episode = Episode.query.get_or_404(id)
     return render_template('episode/detail.html', episode=episode)
     
-@app.route('/series/mark', methods=('GET', 'POST'))
+@app.route('/series/mark', methods=['POST'])
 @login_required
 def markSeries():
     id = request.form.get('id', None)
     series = Series.query.get_or_404(id)
     
-    #if request.method == 'GET':
-    #    create_token()
-    #    return render_template('series/add.html', series=series)
+    url = request.referrer
     
     if not validate_token():
         return redirect(url_for('markSeries', id=series.id))
@@ -105,17 +103,17 @@ def markSeries():
         flash('Removed from watchlist!', 'success')
     db.session.commit()
     
+    if url is not None:
+        return redirect(url)
+    
     return redirect(url_for('showSeries', id=series.id))
     
-@app.route('/episode/mark', methods=('GET', 'POST'))
+@app.route('/episode/mark', methods=['POST'])
 @login_required
 def markEpisode():
     id = request.form.get('id', None)
     episode = Episode.query.get_or_404(id)
     
-    #if request.method == 'GET':
-    #    create_token()
-    #    return render_template('series/add.html', series=series)
     url = request.referrer
     
     if not validate_token():
