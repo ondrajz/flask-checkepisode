@@ -145,4 +145,7 @@ class Episode(db.Model):
     def runtime(self):
         if not isinstance(self.air_time, unicode):
             return self.air_time
-        return datetime.strptime('%s %s'%(self.air_time, self.series.airs_time), '%Y%m%d %I:%M%p')
+        t = self.series.airs_time
+        if t is None:
+            t = '00:00AM'
+        return datetime.strptime('%s %s'%(self.air_time, t), '%Y%m%d %I:%M%p')
