@@ -1,24 +1,28 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Log in
+  New account
 {% endblock %}
 
 {% block content %}
 <div class="row">
     <div style="width: 270px; margin: 0 auto;">
-        <h2>Log in</h2>
+        <h2>New account</h2>
         <form method="POST" action="" class="well">
             <label class="control-label" for="username">Login name:</label>
             <div class="controls">
-                <input type="text" name="username">
+                <input type="text" name="username" {% if name %}value="{{ name }}"{% endif %}>
             </div>
             <label class="control-label" for="password">Password:</label>
             <div class="controls">
                 <input type="password" name="password">
             </div>
+            <label class="control-label" for="rpassword">Repeat password:</label>
+            <div class="controls">
+                <input type="password" name="rpassword">
+            </div>
             <hr class="soften" style="margin: 8px 0;">
-            <button class="btn btn-primary" type="submit">Log in</button>
+            <button class="btn btn-primary" type="submit">Register</button>
         </form>
     </div>
 </div>

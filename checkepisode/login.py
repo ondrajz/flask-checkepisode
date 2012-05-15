@@ -67,3 +67,31 @@ def logout():
     session.pop('user-id', None)
     flash('You have logged out.', 'success')
     return redirect(url_for('index'))
+    
+@app.route('/register', methods=('GET', 'POST'))
+def register():
+    if request.method == 'GET':
+        return render_template('register.html')
+        
+    username = request.form['username']
+    password = request.form['password']
+    rpassword = request.form['rpassword']
+
+    if User.query.filter_by(name=username).count()>0:
+        flash('User with this name already exists.', 'error')
+        return render_template('register.html', name=username)
+        
+    if len(password)<=3:
+        flash('Password must be at least 4 characters long.', 'error')
+        return render_template('register.html', name=username)
+        
+    if password!=rpassword:
+        flash('Passwords did not match.', 'error')
+        return render_template('register.html', name=username)
+        
+    user = User(username, password)
+    db.session.add(user)
+    db.session.commit()
+    
+    flash('Your account has been created, you can now log in.', 'success')
+    return redirect(url_for('login'))
