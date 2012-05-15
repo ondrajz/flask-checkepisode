@@ -82,11 +82,13 @@ def showEpisode(id):
     episode = Episode.query.get_or_404(id)
     return render_template('episode/detail.html', episode=episode)
     
-@app.route('/series/mark', methods=['POST'])
+@app.route('/series/<int:id>/mark', methods=('GET', 'POST'))
 @login_required
-def markSeries():
-    id = request.form.get('id', None)
+def markSeries(id):
     series = Series.query.get_or_404(id)
+    
+    if request.method == 'GET':
+        return redirect(url_for('showSeries', id=series.id))
     
     url = request.referrer
     
@@ -108,11 +110,13 @@ def markSeries():
     
     return redirect(url_for('showSeries', id=series.id))
     
-@app.route('/episode/mark', methods=['POST'])
+@app.route('/episode/<int:id>/mark', methods=('GET', 'POST'))
 @login_required
-def markEpisode():
-    id = request.form.get('id', None)
+def markEpisode(id):
     episode = Episode.query.get_or_404(id)
+    
+    if request.method == 'GET':
+        return redirect(url_for('showEpisode', id=episode.id))
     
     url = request.referrer
     
