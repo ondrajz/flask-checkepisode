@@ -82,9 +82,9 @@ def showEpisode(id):
     episode = Episode.query.get_or_404(id)
     return render_template('episode/detail.html', episode=episode)
     
-@app.route('/series/<int:id>/mark', methods=('GET', 'POST'))
+@app.route('/series/<int:id>/check', methods=('GET', 'POST'))
 @login_required
-def markSeries(id):
+def checkSeries(id):
     series = Series.query.get_or_404(id)
     
     if request.method == 'GET':
@@ -93,7 +93,7 @@ def markSeries(id):
     url = request.referrer
     
     if not validate_token():
-        return redirect(url_for('markSeries', id=series.id))
+        return redirect(url_for('checkSeries', id=series.id))
     
     add = request.form.get('add', None)
     if add:
@@ -110,9 +110,9 @@ def markSeries(id):
     
     return redirect(url_for('showSeries', id=series.id))
     
-@app.route('/episode/<int:id>/mark', methods=('GET', 'POST'))
+@app.route('/episode/<int:id>/check', methods=('GET', 'POST'))
 @login_required
-def markEpisode(id):
+def checkEpisode(id):
     episode = Episode.query.get_or_404(id)
     
     if request.method == 'GET':
@@ -121,7 +121,7 @@ def markEpisode(id):
     url = request.referrer
     
     if not validate_token():
-        return redirect(url_for('markEpisode', id=episode.id))
+        return redirect(url_for('checkEpisode', id=episode.id))
     
     add = request.form.get('add', None)
     if add:

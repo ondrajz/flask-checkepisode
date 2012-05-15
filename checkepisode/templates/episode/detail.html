@@ -24,7 +24,7 @@
                     <tr>
                         <td class="table-top" style="vertical-align: middle;"><b>Watched:</b></td>
                         <td class="table-top" style="padding-left: 0;">
-                            <form method="POST" action="{{ url_for('markEpisode', id=episode.id) }}" style="margin: 0;">
+                            <form method="POST" action="{{ url_for('checkEpisode', id=episode.id) }}" style="margin: 0;">
                                 <input type="hidden" name="token" value="{{ session['token'] }}">
                                 <input type="checkbox" name="add" value="1" style="display: none;"{% if not episode in g.user.watched_episodes %}checked="true"{% endif %}>
                                 <input alt="" type="image" {% if episode in g.user.watched_episodes %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %}>
