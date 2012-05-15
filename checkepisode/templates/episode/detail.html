@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
-<style type="text/css">
-td.table-top {
-    border-top: none;
-}
-</style>
 {% endblock %}
 
 {% block content %}
@@ -27,8 +22,20 @@ td.table-top {
             <table class="table" style="margin-bottom: 0;">
                 <tbody>
                     <tr>
-                        <td class="table-top"><b>Airing:</b></td>
-                        <td class="table-top">{{ episode.air_time|to_date|friendly_time }}</td>
+                        <td class="table-top" style="vertical-align: middle;"><b>Watched:</b></td>
+                        <td class="table-top" style="padding-left: 0;">
+                            <form method="POST" action="{{ url_for('markEpisode') }}" style="margin: 0;">
+                                <input type="hidden" name="token" value="{{ session['token'] }}">
+                                <input type="hidden" name="id" value="{{ episode.id }}">
+                                <input type="checkbox" name="add" value="1" style="display: none;"{% if not episode in g.user.watched_episodes %}checked="true"{% endif %}>
+                                <input alt="" type="image" {% if episode in g.user.watched_episodes %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %}>
+                            </form>
+                          <img src="/static/img/loading.gif" style="display: none;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Airing:</b></td>
+                        <td>{{ episode.air_time|to_date|friendly_time }}</td>
                     </tr><tr>
                         <td><b>Number:</b></td>
                         <td>S{{ pad_zeroes(episode.seas_num) }}E{{ pad_zeroes(episode.epis_num) }}</td>

@@ -40,6 +40,24 @@
             height: 1px;
             margin: 17px 0;
         }
+        td.table-top {
+            border-top: none;
+        }
+        input.new-checkbox-checked {
+            background: url("/static/img/checkbox.png") no-repeat scroll 0 -64px transparent;
+            height: 32px;
+            width: 32px;
+            display: block;
+        }
+        input.new-checkbox-unchecked {
+            background: url("/static/img/checkbox.png") no-repeat scroll 0 0 transparent;
+            height: 32px;
+            width: 32px;
+            display: block;
+        }
+        input.new-checkbox-unchecked:hover {
+            background-position: 0 -32px;
+        }
         </style>
         {% block extrahead %}{% endblock %}
     </head>
@@ -55,26 +73,29 @@
                     </a>
                     <a href="/" class="brand"><span style="color: #46a546">Check</span><span style="color: #049cdb">Episode</span></a>
 
-                    <div class="btn-group pull-right">
-                    {% if g.user %}
-                        <a data-toggle="dropdown" class="btn dropdown-toggle">
-                            <i class="icon-user"></i>  {{ g.user.name }}
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/logout">Log Out</a></li>
-                        </ul>
-                    {% else %}
-                        <a href="/login" class="btn">
-                            <i class="icon-user"></i> Log in
-                        </a>
-                    {% endif %}
-                    </div>
-                    
                     <div class="nav-collapse">
-                    <ul class="nav">
-                        <li class="active"><a href="#">Home</a></li>
-                    </ul>
+                        <ul class="nav">
+                            <li class="active"><a href="#">Home</a></li>
+                        </ul>
+                        
+                        <div class="navbar-text pull-right">
+                        {% if g.user %}
+                            <div class="btn-group">
+                                <a data-toggle="dropdown" class="btn dropdown-toggle">
+                                    <i class="icon-user"></i>  {{ g.user.name }}
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/logout">Log Out</a></li>
+                                </ul>
+                            </div>
+                        {% else %}
+                            <a href="/login" class="btn">
+                                <i class="icon-user"></i> Log in
+                            </a>
+                            or <a href="/register">register</a>
+                        {% endif %}
+                        </div>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>

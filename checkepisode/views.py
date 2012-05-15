@@ -49,12 +49,18 @@ def utility_processor():
 @app.route('/')
 def index():
     create_token()
-    t = date.today() - timedelta(days=7)
     if g.user:
-        sids = [x.id for x in g.user.favorite_series]
-        episodes = Episode.query.filter(Episode.series_id.in_(sids)).filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
-        return render_template('watchlist.html', episodes=episodes, today=datetime.now())
+        episodes = Episode.query.filter(Episode.series_id.in_(x.id for x in g.user.favorite_series)).filter(Episode.air_time!=None).order_by(Episode.air_time)
+        aired_eps = []
+        upcoming_eps = []
+        for e in episodes:
+            if e.runtime<datetime.now():
+                aired_eps.append(e)
+            else:
+                upcoming_eps.append(e)
+        return render_template('watchlist.html', aired_eps=aired_eps, upcoming_eps=upcoming_eps, today=datetime.now())
     else:
+        t = date.today() - timedelta(days=7)
         episodes = Episode.query.filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
         return render_template('home.html', episodes=episodes, today=datetime.now())
     
@@ -76,17 +82,18 @@ def showEpisode(id):
     episode = Episode.query.get_or_404(id)
     return render_template('episode/detail.html', episode=episode)
     
-@app.route('/series/<int:id>/add', methods=('GET', 'POST'))
+@app.route('/series/mark', methods=('GET', 'POST'))
 @login_required
-def addSeries(id):
+def markSeries():
+    id = request.form.get('id', None)
     series = Series.query.get_or_404(id)
     
-    if request.method == 'GET':
-        create_token()
-        return render_template('series/add.html', series=series)
+    #if request.method == 'GET':
+    #    create_token()
+    #    return render_template('series/add.html', series=series)
     
     if not validate_token():
-        return redirect(url_for('addSeries', id=series.id))
+        return redirect(url_for('markSeries', id=series.id))
     
     add = request.form.get('add', None)
     if add:
@@ -99,3 +106,32 @@ def addSeries(id):
     db.session.commit()
     
     return redirect(url_for('showSeries', id=series.id))
+    
+@app.route('/episode/mark', methods=('GET', 'POST'))
+@login_required
+def markEpisode():
+    id = request.form.get('id', None)
+    episode = Episode.query.get_or_404(id)
+    
+    #if request.method == 'GET':
+    #    create_token()
+    #    return render_template('series/add.html', series=series)
+    url = request.referrer
+    
+    if not validate_token():
+        return redirect(url_for('markEpisode', id=episode.id))
+    
+    add = request.form.get('add', None)
+    if add:
+        if episode not in g.user.watched_episodes:
+            g.user.watched_episodes.append(episode)
+            flash('Added to watched!', 'success')
+    else:
+        g.user.watched_episodes.remove(episode)
+        flash('Removed from watched!', 'success')
+    db.session.commit()
+    
+    if url is not None:
+        return redirect(url)
+    
+    return redirect(url_for('showEpisode', id=episode.id))

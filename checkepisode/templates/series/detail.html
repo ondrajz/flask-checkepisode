@@ -1,26 +1,6 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
-<style type="text/css">
-td.table-top {
-    border-top: none;
-}
-a.new-checkbox-checked {
-    background: url("/static/img/checkbox.png") no-repeat scroll 0 -64px transparent;
-    height: 32px;
-    width: 32px;
-    display: block;
-}
-a.new-checkbox-unchecked {
-    background: url("/static/img/checkbox.png") no-repeat scroll 0 0 transparent;
-    height: 32px;
-    width: 32px;
-    display: block;
-}
-a.new-checkbox-unchecked:hover {
-    background-position: 0 -32px;
-}
-</style>
 {% endblock %}
 
 {% block content %}
@@ -39,7 +19,15 @@ a.new-checkbox-unchecked:hover {
                 <tbody>
                     <tr>
                         <td class="table-top" style="vertical-align: middle;"><b>Watchlist:</b></td>
-                        <td class="table-top" style="padding-left: 0;"><a {% if g.user and series in g.user.favorite_series %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %} href="/series/{{ series.id }}/add"></a><img src="/static/img/loading.gif" style="display: none;"></td>
+                        <td class="table-top" style="padding-left: 0;">
+                            <form method="POST" action="{{ url_for('markSeries') }}" style="margin: 0;">
+                                <input type="hidden" name="token" value="{{ session['token'] }}">
+                                <input type="hidden" name="id" value="{{ series.id }}">
+                                <input type="checkbox" name="add" value="1" style="display: none;"{% if not series in g.user.favorite_series %}checked="true"{% endif %}>
+                                <input alt="" type="image" {% if series in g.user.favorite_series %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %}>
+                            </form>
+                          <img src="/static/img/loading.gif" style="display: none;">
+                        </td>
                     </tr><tr>
                         <td><b>Status:</b></td>
                         <td>{% if series.status.caption == "Continuing" %}
