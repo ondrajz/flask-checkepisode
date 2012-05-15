@@ -4,7 +4,7 @@ from flask import abort, render_template, request, redirect, \
     url_for, g, flash, session, abort
 from datetime import date, timedelta, datetime
 import urllib
-from sqlalchemy.sql import func, tuple_, or_
+from sqlalchemy.sql import func
 from checkepisode.login import login_required
 
 today = date.today()
