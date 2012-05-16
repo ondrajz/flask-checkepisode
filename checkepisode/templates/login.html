@@ -8,15 +8,20 @@
 <div class="row">
     <div style="width: 270px; margin: 0 auto;">
         <h2>Log in</h2>
-        <form method="POST" action="" class="well">
-            <label class="control-label" for="username">Login name:</label>
+        <form method="POST" action="{{ url_for('flask_security.authenticate') }}" class="well">
+            {{ form.hidden_tag() }}
+            <label class="control-label" for="username">Email:</label>
             <div class="controls">
-                <input type="text" name="username">
+                {{ form.email }}<!--<input type="text" name="username">-->
             </div>
             <label class="control-label" for="password">Password:</label>
             <div class="controls">
-                <input type="password" name="password">
+                {{ form.password }}<!--<input type="password" name="password">-->
             </div>
+            <label class="checkbox">
+                {{ form.remember }}<!--<input type="checkbox" value="1" name="remember">-->Remember me
+            </label>
+            {{ form.next }}
             <hr class="soften" style="margin: 8px 0;">
             <button class="btn btn-primary" type="submit">Log in</button>
         </form>

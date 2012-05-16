@@ -1,4 +1,4 @@
-from flask import Flask, flash, request, session, render_template, g, jsonify
+from flask import Flask, flash, request, session, render_template, g, jsonify, current_app
 import os
 
 app = Flask(__name__)
@@ -24,6 +24,12 @@ import friendly_time
 import login
 import views
 import logger
+
+#@app.before_first_request
+def before_first_request():
+    current_app.security.datastore.create_role(name='admin')
+    current_app.security.datastore.create_user(email='admin@admin.com',
+                                                password='admin', roles=['admin'])
 
 @app.before_request
 def load_json():

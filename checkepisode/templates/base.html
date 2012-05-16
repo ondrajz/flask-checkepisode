@@ -82,10 +82,10 @@
                         </ul>
                         
                         <div class="navbar-text pull-right">
-                        {% if g.user %}
+                        {% if current_user.is_authenticated() %}
                             <div class="btn-group">
                                 <a data-toggle="dropdown" class="btn dropdown-toggle">
-                                    <i class="icon-user"></i>  {{ g.user.name }}
+                                    <i class="icon-user"></i>  {{ current_user.email }}
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">

@@ -5,7 +5,8 @@ from flask import abort, render_template, request, redirect, \
 from datetime import date, timedelta, datetime
 import urllib
 from sqlalchemy.sql import func
-from checkepisode.login import login_required
+from flask.ext.security import Security, LoginForm,  login_required, \
+                                roles_accepted, current_user
 
 today = date.today()
 
@@ -49,8 +50,8 @@ def utility_processor():
 @app.route('/')
 def index():
     create_token()
-    if g.user:
-        episodes = Episode.query.filter(Episode.series_id.in_(x.id for x in g.user.favorite_series)).filter(Episode.air_time!=None).order_by(Episode.air_time)
+    if current_user.is_authenticated():
+        episodes = Episode.query.filter(Episode.series_id.in_(x.id for x in current_user.favorite_series)).filter(Episode.air_time!=None).order_by(Episode.air_time)
         aired_eps = []
         upcoming_eps = []
         for e in episodes:

@@ -1,10 +1,10 @@
 from checkepisode import app
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.security.datastore import SQLAlchemyUserDatastore
+from flask.ext.security import Security, UserMixin, RoleMixin, LoginForm
 from datetime import datetime
 
 db = SQLAlchemy(app)
-
-from passlib.apps import custom_app_context as pwd_context
 
 favorite_series = db.Table('favorite_series',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -16,24 +16,52 @@ watched_episodes = db.Table('watched_episodes',
     db.Column('episode_id', db.Integer, db.ForeignKey('episode.id'))
 )
 
-class User(db.Model):
-    __tablename__ = 'user'
+roles_users = db.Table('roles_users',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id')))
+
+class Role(db.Model, RoleMixin):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(35), unique=True)
-    email = db.Column(db.String(60), unique=True)
-    password = db.Column(db.String(128))
+    email = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(120))
+    active = db.Column(db.Boolean())
+    confirmation_token = db.Column(db.String(255))
+    confirmation_sent_at = db.Column(db.DateTime())
+    confirmed_at = db.Column(db.DateTime())
+    roles = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
     favorite_series = db.relationship('Series', secondary=favorite_series,
         backref=db.backref('users', lazy='dynamic'))
     watched_episodes = db.relationship('Episode', secondary=watched_episodes,
         backref=db.backref('users', lazy='dynamic'))
+        
+Security(app, SQLAlchemyUserDatastore(db, User, Role))
 
-    def __init__(self, name, password):
-        app.logger.info('Creating user "%s".', name)
-        self.name = name
-        self.password = pwd_context.encrypt(password)
+#from passlib.apps import custom_app_context as pwd_context
 
-    def verify(self, password):
-        return pwd_context.verify(password, self.password)
+#class User(db.Model):
+#    __tablename__ = 'user'
+#    id = db.Column(db.Integer, primary_key=True)
+#    name = db.Column(db.String(35), unique=True)
+#    email = db.Column(db.String(60), unique=True)
+#    password = db.Column(db.String(128))
+#    favorite_series = db.relationship('Series', secondary=favorite_series,
+#        backref=db.backref('users', lazy='dynamic'))
+#    watched_episodes = db.relationship('Episode', secondary=watched_episodes,
+#        backref=db.backref('users', lazy='dynamic'))
+
+#    def __init__(self, name, password):
+#        app.logger.info('Creating user "%s".', name)
+#        self.name = name
+#        self.password = pwd_context.encrypt(password)
+
+#    def verify(self, password):
+#        return pwd_context.verify(password, self.password)
         
 class Language(db.Model):
     __tablename__ = 'language'
