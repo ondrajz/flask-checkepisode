@@ -27,7 +27,7 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
-real_config.py
+config.py
 seriesZip/
 log.log
 shows

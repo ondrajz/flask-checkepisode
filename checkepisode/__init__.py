@@ -2,7 +2,7 @@ from flask import Flask, flash, request, session, render_template, g, jsonify, c
 import os
 
 app = Flask(__name__)
-app.config.from_object('real_config')
+app.config.from_object('config')
 # this needs to be changed to config
 app.secret_key = app.config['SECRET_KEY']
 
@@ -28,7 +28,8 @@ import logger
 #@app.before_first_request
 def before_first_request():
     current_app.security.datastore.create_role(name='admin')
-    current_app.security.datastore.create_user(email='admin@admin.com',
+    current_app.security.datastore.create_role(name='user')
+    current_app.security.datastore.create_user(name='admin', email='admin@admin.com',
                                                 password='admin', roles=['admin'])
 
 @app.before_request
