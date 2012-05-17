@@ -40,8 +40,8 @@
                         <td style="padding: 0 8px;">
                             <form method="POST" action="{{ url_for('checkEpisode', id=ep.id ) }}" style="margin: 0;">
                                 <input type="hidden" name="token" value="{{ session['token'] }}">
-                                <input type="checkbox" name="add" value="1" style="display: none;"{% if not ep in g.user.watched_episodes %}checked="true"{% endif %}>
-                                <input style="margin: 0;" alt="" type="image" {% if ep in g.user.watched_episodes %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %}>
+                                <input type="checkbox" name="add" value="1" style="display: none;"{% if not ep in current_user.watched_episodes %}checked="true"{% endif %}>
+                                <input style="margin: 0;" alt="" type="image" {% if ep in current_user.watched_episodes %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %}>
                             </form>
                         </td>
                     </tr>

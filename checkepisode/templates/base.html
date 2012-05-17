@@ -58,8 +58,11 @@
         input.new-checkbox-unchecked:hover {
             background-position: 0 -32px;
         }
-        a.nav-link:hover{
+        a.nav-link:hover {
             color: #FFFFFF;
+        }
+        input.has_error {
+            border-color: #FF0000;
         }
         </style>
         {% block extrahead %}{% endblock %}
@@ -85,7 +88,7 @@
                         {% if current_user.is_authenticated() %}
                             <div class="btn-group">
                                 <a data-toggle="dropdown" class="btn dropdown-toggle">
-                                    <i class="icon-user"></i>  {{ current_user.email }}
+                                    <i class="icon-user"></i>  {{ current_user.name }}
                                     <span class="caret"></span>
                                 </a>
                                 <ul class="dropdown-menu">

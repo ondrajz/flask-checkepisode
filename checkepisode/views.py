@@ -7,7 +7,6 @@ import urllib
 from sqlalchemy.sql import func
 from flask.ext.security import Security, LoginForm,  login_required, \
                                 roles_accepted, current_user
-
 today = date.today()
 
 @app.template_filter()
@@ -98,11 +97,11 @@ def checkSeries(id):
     
     add = request.form.get('add', None)
     if add:
-        if series not in g.user.favorite_series:
-            g.user.favorite_series.append(series)
+        if series not in current_user.favorite_series:
+            current_user.favorite_series.append(series)
             flash('Added to watchlist!', 'success')
     else:
-        g.user.favorite_series.remove(series)
+        current_user.favorite_series.remove(series)
         flash('Removed from watchlist!', 'success')
     db.session.commit()
     
@@ -126,11 +125,11 @@ def checkEpisode(id):
     
     add = request.form.get('add', None)
     if add:
-        if episode not in g.user.watched_episodes:
-            g.user.watched_episodes.append(episode)
+        if episode not in current_user.watched_episodes:
+            current_user.watched_episodes.append(episode)
             flash('Added to watched!', 'success')
     else:
-        g.user.watched_episodes.remove(episode)
+        current_user.watched_episodes.remove(episode)
         flash('Removed from watched!', 'success')
     db.session.commit()
     

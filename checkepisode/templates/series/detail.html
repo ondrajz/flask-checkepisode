@@ -22,8 +22,8 @@
                         <td class="table-top" style="padding-left: 0;">
                             <form method="POST" action="{{ url_for('checkSeries', id=series.id) }}" style="margin: 0;">
                                 <input type="hidden" name="token" value="{{ session['token'] }}">
-                                <input type="checkbox" name="add" value="1" style="display: none;"{% if not series in g.user.favorite_series %}checked="true"{% endif %}>
-                                <input alt="" type="image" {% if series in g.user.favorite_series %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %}>
+                                <input type="checkbox" name="add" value="1" style="display: none;"{% if not series in current_user.favorite_series %}checked="true"{% endif %}>
+                                <input alt="" type="image" {% if series in current_user.favorite_series %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %}>
                             </form>
                           <img src="/static/img/loading.gif" style="display: none;">
                         </td>

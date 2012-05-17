@@ -27,6 +27,7 @@ class Role(db.Model, RoleMixin):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30), unique=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(120))
     active = db.Column(db.Boolean())
@@ -40,28 +41,7 @@ class User(db.Model, UserMixin):
     watched_episodes = db.relationship('Episode', secondary=watched_episodes,
         backref=db.backref('users', lazy='dynamic'))
         
-Security(app, SQLAlchemyUserDatastore(db, User, Role))
-
-#from passlib.apps import custom_app_context as pwd_context
-
-#class User(db.Model):
-#    __tablename__ = 'user'
-#    id = db.Column(db.Integer, primary_key=True)
-#    name = db.Column(db.String(35), unique=True)
-#    email = db.Column(db.String(60), unique=True)
-#    password = db.Column(db.String(128))
-#    favorite_series = db.relationship('Series', secondary=favorite_series,
-#        backref=db.backref('users', lazy='dynamic'))
-#    watched_episodes = db.relationship('Episode', secondary=watched_episodes,
-#        backref=db.backref('users', lazy='dynamic'))
-
-#    def __init__(self, name, password):
-#        app.logger.info('Creating user "%s".', name)
-#        self.name = name
-#        self.password = pwd_context.encrypt(password)
-
-#    def verify(self, password):
-#        return pwd_context.verify(password, self.password)
+Security(app, SQLAlchemyUserDatastore(db, User, Role), registerable=False)
         
 class Language(db.Model):
     __tablename__ = 'language'
