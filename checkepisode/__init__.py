@@ -1,10 +1,12 @@
 from flask import Flask, flash, request, session, render_template, g, jsonify, current_app
+from flask.ext.mail import Mail
 import os
 
 app = Flask(__name__)
 app.config.from_object('config')
-# this needs to be changed to config
 app.secret_key = app.config['SECRET_KEY']
+
+app.mail = Mail(app)
 
 def create_token(length=32):
     # Take random bytes from os.urandom, turn them into hexadecimals, and join

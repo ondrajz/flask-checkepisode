@@ -7,6 +7,9 @@ from flask.ext.security import Security, LoginForm
 from models import User
 from flask.ext.wtf import Form, TextField, PasswordField, SubmitField, \
      HiddenField, Required, BooleanField, EqualTo, Email, RecaptchaField
+from flask.ext.security.confirmable import confirmation_token_is_expired, \
+     send_confirmation_instructions, generate_confirmation_token, \
+     reset_confirmation_token, requires_confirmation, confirm_by_token
 
 class RegisterForm(Form):     
     name = TextField('NickName', [Required()])
