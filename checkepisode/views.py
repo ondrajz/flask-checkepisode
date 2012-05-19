@@ -48,21 +48,25 @@ def utility_processor():
 
 @app.route('/')
 def index():
-    create_token()
     if current_user.is_authenticated():
-        episodes = Episode.query.filter(Episode.series_id.in_(x.id for x in current_user.favorite_series)).filter(Episode.air_time!=None).order_by(Episode.air_time)
-        aired_eps = []
-        upcoming_eps = []
-        for e in episodes:
-            if e.runtime<datetime.now():
-                aired_eps.append(e)
-            else:
-                upcoming_eps.append(e)
-        return render_template('watchlist.html', aired_eps=aired_eps, upcoming_eps=upcoming_eps, today=datetime.now())
-    else:
-        t = date.today() - timedelta(days=7)
-        episodes = Episode.query.filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
-        return render_template('home.html', episodes=episodes, today=datetime.now())
+        return redirect(url_for('watchlist'))
+    t = date.today() - timedelta(days=7)
+    episodes = Episode.query.filter(Episode.air_time>=t.strftime('%Y%m%d')).order_by(Episode.air_time)
+    return render_template('home.html', episodes=episodes, today=datetime.now())
+        
+@app.route('/watchlist')
+@login_required
+def watchlist():
+    create_token()
+    episodes = Episode.query.filter(Episode.series_id.in_(x.id for x in current_user.favorite_series)).filter(Episode.air_time!=None).order_by(Episode.air_time)
+    aired_eps = []
+    upcoming_eps = []
+    for e in episodes:
+        if e.runtime<datetime.now():
+            aired_eps.append(e)
+        else:
+            upcoming_eps.append(e)
+    return render_template('watchlist.html', aired_eps=aired_eps, upcoming_eps=upcoming_eps, today=datetime.now())
     
 @app.route('/series/<int:id>')
 def showSeries(id):

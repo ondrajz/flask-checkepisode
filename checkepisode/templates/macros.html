@@ -1,5 +1,5 @@
 {% macro render_field(field) %}
-    <div class="controls">
+    <div class="controls" style="width: 210px; margin: 0 auto;">
     {% if field.errors %}
         <p>{{ field.label(class="control-label") }}
         <span class="label label-important">{{ field.errors[0]|e }}</span></p>

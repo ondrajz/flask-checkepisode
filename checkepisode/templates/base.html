@@ -80,9 +80,15 @@
                     <a href="/" class="brand"><span style="color: #46a546">Check</span><span style="color: #049cdb">Episode</span></a>
 
                     <div class="nav-collapse">
+                        {% if current_user.is_authenticated() %}
                         <ul class="nav">
-                            <li class="active"><a href="#">Home</a></li>
+                            <li class="active"><a href="/watchlist">Watchlist</a></li>
                         </ul>
+                        {% endif %}
+                        
+                        <form class="navbar-search pull-left" action="">
+                            <input class="search-query span2" type="text" placeholder="Search">
+                        </form>
                         
                         <div class="navbar-text pull-right">
                         {% if current_user.is_authenticated() %}
