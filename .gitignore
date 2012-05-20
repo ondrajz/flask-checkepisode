@@ -32,5 +32,4 @@ seriesZip/
 log.log
 shows
 lastupdate
-checkepisode/static/episodes/
-checkepisode/static/graphical/
+checkepisode/static/series/
