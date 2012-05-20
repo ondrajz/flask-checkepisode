@@ -15,7 +15,7 @@ def friendly_time(dt, past_="ago",
     3 days ago, 5 hours from now etc.
     """
 
-    now = datetime.utcnow()
+    now = datetime.now()
     if now > dt:
         diff = now - dt
         dt_is_past = True
