@@ -8,9 +8,9 @@ MIRROR = "http://www.thetvdb.com/"
 API_KEY = "4E5D5C8EFC4175A1"
 REMOVE_OLD = False
 INSTANT_COMMIT = False
-PRINT_COLUMN_DETAIL = INSTANT_COMMIT
+PRINT_COLUMN_DETAIL = True
 REMOVE_OLD_IMAGES = False
-IMAGE_FOLDER = "checkepisode/static/"
+IMAGE_FOLDER = "checkepisode/static/series/"
 
 def getLanguage_id(lang):
     old = Language.query.filter_by(caption=lang).first()
@@ -75,7 +75,6 @@ def updateSeries(series, xmlSeries):
         if first_air:
             if PRINT_COLUMN_DETAIL: print "Saving first aired.."
             series.first_aired = first_air.replace('-', '')
-            #series.first_aired = datetime(first_air[0:4], first_air[4:2], first_air[6:2])
             if INSTANT_COMMIT: db.session.commit() 
         # = = =
         air_dow = xmlSeries.findtext("Airs_DayOfWeek")
@@ -154,6 +153,23 @@ def updateSeries(series, xmlSeries):
                 if PRINT_COLUMN_DETAIL: print "Downloading banner"
                 urllib.urlretrieve('%sbanners/%s' % (MIRROR, banner), image_file)
             if INSTANT_COMMIT: db.session.commit()
+        # = = =
+        poster = xmlSeries.findtext("poster")
+        if poster:
+            if PRINT_COLUMN_DETAIL: print "Saving poster.."
+            series.poster = poster
+            image_file = "%s%s" % (IMAGE_FOLDER, poster)
+            dir_path = os.path.dirname(image_file)
+            if not os.path.exists(dir_path):
+                print "Creating %s" % dir_path
+                os.makedirs(dir_path)
+            if os.path.isfile(image_file) and REMOVE_OLD_IMAGES:
+                if PRINT_COLUMN_DETAIL: print "Removing old poster"
+                os.remove(image_file)
+            if not os.path.isfile(image_file):
+                if PRINT_COLUMN_DETAIL: print "Downloading poster"
+                urllib.urlretrieve('%sbanners/%s' % (MIRROR, poster), image_file)
+            if INSTANT_COMMIT: db.session.commit()
         # -----------------------
     
 def getEpisode(epID, serID):
@@ -191,7 +207,6 @@ def updateEpisode(xmlEpisode):
                 if air_time:
                     if PRINT_COLUMN_DETAIL: print "Saving airing time.."
                     episode.air_time = air_time.replace('-', '')
-                    #episode.air_time = datetime(air_time[0:4], air_time[4:2], air_time[6:2])
                     if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 seas_num = xmlEpisode.findtext("SeasonNumber")

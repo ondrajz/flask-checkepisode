@@ -118,6 +118,7 @@ class Series(db.Model):
         backref=db.backref('series', lazy='dynamic'))
     last_update = db.Column(db.Integer)
     banner = db.Column(db.String(40))
+    poster = db.Column(db.String(40))
 
     def __init__(self, name):
         self.name = name

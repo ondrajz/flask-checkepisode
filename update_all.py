@@ -12,7 +12,7 @@ def getIdFor(name):
     try:
         tvxml = et.fromstring(xml)
         series = tvxml.find('Series')
-        if series:
+        if series is not None:
             serName = series.findtext('SeriesName')
             if serName == name:
                 sId = int(series.findtext('seriesid'))
@@ -64,7 +64,7 @@ def getInfoFile(ser_id):
     
 def getAllInfo(series):
     if series:
-        print "Retrieving all info about %d\n" % series.tvdb_id
+        print "\nRetrieving all info about %d" % series.tvdb_id
         info = getInfoFile(series.tvdb_id)
         if os.path.isfile(info):
             print "Parsing en.xml"
