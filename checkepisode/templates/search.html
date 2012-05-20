@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Search
+{% endblock %}
+
+{% block search %}
+{{ q }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="span12">
+        <legend>
+            Search
+        </legend>
+        <div class="row">
+        <div class="span6">
+            {% if not q %}
+            <form class="form-horizontal" action="/search">
+            <div class="control-group">
+            <label for="inputIcon" class="control-label">Keyword</label>
+            <div class="controls">
+                <div class="input-prepend">
+                <span class="add-on"><i class="icon-search"></i></span><input type="text" id="inputIcon" class="span2" name="q">
+                </div>
+            </div>
+            </div>
+            </form>
+            {% else %}
+                {% if series|length>0 %}
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Show</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for s in series %} 
+                            <tr>
+                            <td width="90px"><a href="/series/{{ s.id }}"><img src="/static/series/{{ s.poster }}" width="85" heigth="125"></a></td>
+                            <td><a href="/series/{{ s.id }}">{{ s.name }}</a></td>
+                            <td>{% if s.status.caption == "Continuing" %}
+                                <span style="margin-left: 0;" class="label label-success">{{ s.status.caption }}</span>
+                            {% endif %}</td> 
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    No results found.
+                {% endif %}
+            {% endif %}
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

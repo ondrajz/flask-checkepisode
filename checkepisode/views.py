@@ -45,6 +45,10 @@ def utility_processor():
             return u'S%02sE%02s' % (sNum, eNum)
         return u'S%02dE%02d' % (s, e)
     return dict(epNum=epNum)
+    
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
 
 @app.route('/')
 def index():
@@ -141,3 +145,15 @@ def checkEpisode(id):
         return redirect(url)
     
     return redirect(url_for('showEpisode', id=episode.id))
+    
+@app.route('/search')
+def search():
+    q = request.args.get('q', None)
+    series = ()
+    if q is None:
+        flash('Please add more constraints to your search!', 'warning')
+    elif len(q)<3:
+        flash('Please enter at least 3 characters!', 'warning')
+    else:
+        series = Series.query.filter(Series.name.like(('%s%s%s' % ('%',q,'%')))).all()
+    return render_template('search.html', q=q, series=series)
