@@ -34,7 +34,7 @@
                     </tr>
                     <tr>
                         <td><b>Airing:</b></td>
-                        <td>{{ episode.air_time|to_date|friendly_time }}</td>
+                        <td>{{ episode.runtime|friendly_time }}</td>
                     </tr><tr>
                         <td><b>Number:</b></td>
                         <td>S{{ pad_zeroes(episode.seas_num) }}E{{ pad_zeroes(episode.epis_num) }}</td>
