@@ -1,3 +1,4 @@
+from config import API_KEY
 from checkepisode.models import *
 from xml.etree import ElementTree as et
 from datetime import datetime
@@ -5,7 +6,6 @@ import os
 import urllib
 
 MIRROR = "http://www.thetvdb.com/"
-API_KEY = "4E5D5C8EFC4175A1"
 REMOVE_OLD = False
 INSTANT_COMMIT = False
 PRINT_COLUMN_DETAIL = True
