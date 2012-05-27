@@ -1,11 +1,11 @@
 from xml.etree import ElementTree as et
 import urllib
 import os
-from updater import *
+from config import MIRROR
 
 def searchFor(name):
     print "Searching for %s" % name
-    results = {}
+    results = []
     filehandle = urllib.urlopen("%sapi/GetSeries.php?seriesname=%s" % (MIRROR, urllib.quote(name)))
     xml = filehandle.read()
     tvxml = et.fromstring(xml)
@@ -16,6 +16,6 @@ def searchFor(name):
             sId = int(series.findtext('seriesid'))
             sFirstAired = series.findtext('FirstAired')
             sOverview = series.findtext('Overview')
-            results[sName] = (sId, sFirstAired, sOverview)
+            results.append({'name': sName, 'id': sId, 'first_aired': sFirstAired, 'overview': sOverview})
             print "%s [%d]" % (sName, sId)
     return results
