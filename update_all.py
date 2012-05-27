@@ -55,7 +55,10 @@ def getAllInfo(series):
                 updateSeries(series, xmlSeries)
             xmlEpisodes = tvxml.findall('Episode')
             print "\nFound %d episodes" % len(xmlEpisodes)
+            x = 1
             for xmlEpisode in xmlEpisodes:
+                print "- - - - - - - - - - - - - - - - - - -\nupdating %d/%d" % (x, len(xmlEpisodes))
+                x = x + 1
                 updateEpisode(xmlEpisode)
         print "\nRetrieving info finished\n"
 
