@@ -74,13 +74,15 @@
                                 <tr>
                                     <th>Show</th>
                                     <th>First aired</th>
+                                    <th>Request</th>
                                 </tr>
                             </thead>
                             <tbody>
                             {% for s in found_series %} 
                                 <tr>
-                                <td><a href="/addseries/{{ s.id }}">{{ s.name }}</a></td>
+                                <td>{{ s.name }}</td>
                                 <td>{% if s.first_aired %}{{ date_string_my(s.first_aired|to_date) }}{% else %}Unknown{% endif %}</td> 
+                                <td><a class="btn btn-success" href="/request/{{ s.id }}">Request</a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
