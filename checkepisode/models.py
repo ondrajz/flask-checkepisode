@@ -120,8 +120,9 @@ class Series(db.Model):
     banner = db.Column(db.String(40))
     poster = db.Column(db.String(40))
 
-    def __init__(self, name):
+    def __init__(self, name, tvdb_id):
         self.name = name
+        self.tvdb_id = tvdb_id
 
     def __repr__(self):
         return '<Series %s>' % self.name
