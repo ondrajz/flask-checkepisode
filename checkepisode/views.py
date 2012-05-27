@@ -149,5 +149,5 @@ def search():
     else:
         series = Series.query.filter(Series.name.like(('%s%s%s' % ('%',q,'%')))).all()
         if current_user.is_authenticated():
-            found_series = searchFor(q)
+            found_series = searchFor(q)[:10]
     return render_template('search.html', q=q, series=series, found_series=found_series)
