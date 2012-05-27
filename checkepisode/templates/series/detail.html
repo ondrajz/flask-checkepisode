@@ -9,7 +9,7 @@
 </div>
 <div class="row">
     <div class="span8">
-        <p><img src="/static/series/{{ series.banner }}" alt="{{ series.name }}"></p>
+        <p><img src="{% if series.banner %}/static/series/{{ series.banner }}{% else %}/static/img/nobanner.png{% endif %}" alt="{{ series.name }}"></p>
         <h3>Overview:</h3>
         <p>{{ series.overview }}</p>
     </div>
@@ -29,15 +29,21 @@
                         </td>
                     </tr><tr>
                         <td><b>Status:</b></td>
-                        <td>{% if series.status.caption == "Continuing" %}
+                        <td>{% if series.status %}
+                        {% if series.status.caption == "Continuing" %}
                             <span style="margin-left: 0;" class="label label-success">{{ series.status.caption }}</span>
+                        {% endif %}
+                        {% else %}
+                            <span style="margin-left: 0;" class="label label-default">Unknown</span>
                         {% endif %}</td>
                     </tr><tr>
                         <td><b>Started airing:</b></td>
                         <td>{{ date_string_my(series.first_aired|to_date) }}</td>
                     </tr><tr>
                         <td><b>Language:</b></td>
-                        <td>{{ series.language.caption }}</td>
+                        <td>{% if series.language %}
+                        {{ series.language.caption }}
+                        {% else %}-{% endif %}</td>
                     </tr><tr>
                         <td><b>Seasons:</b></td>
                         <td>{{ seasonCount }}</td>
@@ -53,6 +59,7 @@
 <hr class="soften">
 <div class="row">
     <div class="span12">
+    {% if season_list %}
     <div class="tabbable">
         <ul class="nav nav-tabs">
             {% for s in range(seasonCount, 0, -1) %}
@@ -107,6 +114,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     </div>
 </div>
 {% endblock %}`
