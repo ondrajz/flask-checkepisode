@@ -1,5 +1,6 @@
 *.py[co]
 *~
+*.kate-swp
 
 # Packages
 *.egg
