@@ -17,7 +17,11 @@ def safe_url(url):
 
 @app.template_filter()
 def to_date(dt):
-    return datetime.strptime(dt.replace('-', ''), '%Y%m%d')
+    try:
+        res_dt = datetime.strptime(dt.replace('-', ''), '%Y%m%d')
+    except:
+        return None
+    return res_dt
 
 @app.context_processor
 def utility_processor():
@@ -28,12 +32,16 @@ def utility_processor():
 @app.context_processor
 def utility_processor():
     def date_string(date):
+        if date is None:
+            return "Unknown"
         return date.strftime('%a %Y-%m-%d %H:%M')
     return dict(date_string=date_string)
     
 @app.context_processor
 def utility_processor():
     def date_string_my(date):
+        if date is None:
+            return "Unknown"
         return date.strftime('%B %d, %Y')
     return dict(date_string_my=date_string_my)
     
@@ -67,12 +75,14 @@ def watchlist():
 def showSeries(id):
     create_token()
     series = Series.query.get_or_404(id)
-    seasonCount = db.session.query(func.max(Episode.seas_num)).filter(Episode.series==series).scalar()
     try:
-        season = int(request.args.get('season', seasonCount))
+        seasonCount = int(db.session.query(func.max(Episode.seas_num)).filter(Episode.series==series).scalar())
     except:
-        season = seasonCount
-    season_list = Episode.query.filter_by(series=series, seas_num=season)
+        seasonCount = 0
+    season = int(request.args.get('season', seasonCount))
+    season_list = Episode.query.filter_by(series=series, seas_num=season).all()
+    if not series.last_update:
+        flash('This show does not contain all informations. It will be updated soon.', 'warning')
     return render_template('series/detail.html', series=series, seasonCount=seasonCount, season=season, season_list=season_list, today=today.strftime('%Y%m%d'))
     
 @app.route('/episode/<int:id>')
@@ -137,8 +147,32 @@ def checkEpisode(id):
     
     return redirect(url_for('showEpisode', id=episode.id))
     
+@app.route('/request', methods=['POST'])
+@login_required
+def addShow():
+    tvdb_id = request.form.get('tvdb_id', None)
+    name = request.form.get('name', None)
+    first_aired = request.form.get('first_aired', None)
+    overview = request.form.get('overview', None)
+    banner = request.form.get('banner', None)
+    
+    if not validate_token():
+        return abort(404)
+        
+    if tvdb_id is None or name is None:
+        return abort(404)
+        
+    new = Series(name, tvdb_id)
+    new.first_aired = first_aired.replace('-', '')
+    new.overview = overview
+    db.session.add(new)
+    db.session.commit()
+    
+    return redirect(url_for('showSeries', id=Series.query.filter_by(tvdb_id=tvdb_id)))
+    
 @app.route('/search')
 def search():
+    create_token()
     q = request.args.get('q', None)
     series = ()
     found_series = ()

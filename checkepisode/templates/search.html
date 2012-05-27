@@ -45,7 +45,7 @@
                         <tbody>
                         {% for s in series %} 
                             <tr>
-                            <td width="90px"><a href="/series/{{ s.id }}"><img src="/static/series/{{ s.poster }}" width="85" heigth="125"></a></td>
+                            <td width="90px"><a href="/series/{{ s.id }}"><img src="{% if s.poster %}/static/series/{{ s.poster }}{% else %}/static/img/noposter.png{% endif %}" width="85" heigth="125"></a></td>
                             <td><a href="/series/{{ s.id }}">{{ s.name }}</a></td>
                             <td>{% if s.first_aired %}{{ date_string_my(s.first_aired|to_date) }}{% else %}Unknown{% endif %}</td>
                             <td>{% if s.status.caption == "Continuing" %}
@@ -78,7 +78,16 @@
                                 <tr>
                                 <td>{{ s.name }}</td>
                                 <td>{% if s.first_aired %}{{ date_string_my(s.first_aired|to_date) }}{% else %}Unknown{% endif %}</td> 
-                                <td><a class="btn btn-success" href="/request/{{ s.id }}">Request</a></td>
+                                <td>
+                                <form method="POST" action="{{ url_for('addShow') }}" style="margin: 0;">
+                                    <input type="hidden" name="token" value="{{ session['token'] }}">
+                                    <input type="hidden" name="tvdb_id" value="{{ s.tvdb_id }}">
+                                    <input type="hidden" name="name" value="{{ s.name }}">
+                                    <input type="hidden" name="first_aired" value="{{ s.first_aired }}">
+                                    <input type="hidden" name="overview" value="{{ s.overview }}">
+                                    <input type="hidden" name="banner" value="{{ s.banner }}">
+                                    <button class="btn btn-success" type="submit">Request</button>
+                                </form>
                                 </tr>
                             {% endfor %}
                             </tbody>
