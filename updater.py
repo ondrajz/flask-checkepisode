@@ -1,16 +1,10 @@
-from config import API_KEY
+from config import API_KEY, MIRROR, REMOVE_OLD, \
+                INSTANT_COMMIT, PRINT_COLUMN_DETAIL, REMOVE_OLD_IMAGES, IMAGE_FOLDER
 from checkepisode.models import *
 from xml.etree import ElementTree as et
 from datetime import datetime
 import os
 import urllib
-
-MIRROR = "http://www.thetvdb.com/"
-REMOVE_OLD = False
-INSTANT_COMMIT = False
-PRINT_COLUMN_DETAIL = True
-REMOVE_OLD_IMAGES = False
-IMAGE_FOLDER = "checkepisode/static/series/"
 
 def getLanguage_id(lang):
     old = Language.query.filter_by(caption=lang).first()
