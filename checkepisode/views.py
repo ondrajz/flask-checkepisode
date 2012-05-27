@@ -17,7 +17,7 @@ def safe_url(url):
 
 @app.template_filter()
 def to_date(dt):
-    return datetime.strptime(dt, '%Y%m%d')
+    return datetime.strptime(dt.replace('-', ''), '%Y%m%d')
 
 @app.context_processor
 def utility_processor():
@@ -34,7 +34,7 @@ def utility_processor():
 @app.context_processor
 def utility_processor():
     def date_string_my(date):
-        return date.strftime('%B %Y')
+        return date.strftime('%B %d, %Y')
     return dict(date_string_my=date_string_my)
     
 @app.errorhandler(404)
