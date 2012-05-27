@@ -159,3 +159,7 @@ class Episode(db.Model):
         if t is None:
             t = '12:00AM'
         return datetime.strptime('%s %s'%(self.air_time, t), '%Y%m%d %I:%M%p')
+        
+    @property
+    def represent(self):
+        return u'S%02dE%02d' % (self.seas_num, self.epis_num)
