@@ -5,7 +5,6 @@ from config import MIRROR
 
 def searchFor(name, all = False):
     from checkepisode.models import Series
-    print "Searching for %s" % name
     results = []
     filehandle = urllib.urlopen("%sapi/GetSeries.php?seriesname=%s" % (MIRROR, urllib.quote(name)))
     xml = filehandle.read()
@@ -18,5 +17,4 @@ def searchFor(name, all = False):
             sFirstAired = series.findtext('FirstAired')
             sOverview = series.findtext('Overview')
             results.append({'name': sName, 'id': sId, 'first_aired': sFirstAired, 'overview': sOverview})
-            print "%s [%d]" % (sName, sId)
     return results
