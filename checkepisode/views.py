@@ -168,7 +168,12 @@ def addShow():
     db.session.add(new)
     db.session.commit()
     
-    return redirect(url_for('showSeries', id=Series.query.filter_by(tvdb_id=tvdb_id)))
+    try:
+        id = new.id
+    except:
+        return abort(404)
+    
+    return redirect(url_for('showSeries', id=id))
     
 @app.route('/search')
 def search():
