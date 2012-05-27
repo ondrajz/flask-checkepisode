@@ -1,10 +1,6 @@
-from checkepisode import app
-from flask.ext.sqlalchemy import SQLAlchemy
-from flask.ext.security.datastore import SQLAlchemyUserDatastore
-from flask.ext.security import Security, UserMixin, RoleMixin, LoginForm
+from checkepisode import db
 from datetime import datetime
-
-db = SQLAlchemy(app)
+from flask.ext.security import UserMixin, RoleMixin
 
 favorite_series = db.Table('favorite_series',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -40,8 +36,6 @@ class User(db.Model, UserMixin):
         backref=db.backref('users', lazy='dynamic'))
     watched_episodes = db.relationship('Episode', secondary=watched_episodes,
         backref=db.backref('users', lazy='dynamic'))
-        
-Security(app, SQLAlchemyUserDatastore(db, User, Role), registerable=False)
         
 class Language(db.Model):
     __tablename__ = 'language'

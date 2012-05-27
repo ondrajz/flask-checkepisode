@@ -7,6 +7,8 @@ import urllib
 from sqlalchemy.sql import func
 from flask.ext.security import Security, LoginForm,  login_required, \
                                 roles_accepted, current_user
+from search import searchFor
+
 today = date.today()
 
 @app.template_filter()
@@ -34,17 +36,6 @@ def utility_processor():
     def date_string_my(date):
         return date.strftime('%B %Y')
     return dict(date_string_my=date_string_my)
-    
-@app.context_processor
-def utility_processor():
-    def epNum(sNum, eNum):
-        try:
-            s = int(sNum)
-            e = int(eNum)
-        except:
-            return u'S%02sE%02s' % (sNum, eNum)
-        return u'S%02dE%02d' % (s, e)
-    return dict(epNum=epNum)
     
 @app.errorhandler(404)
 def page_not_found(error):
@@ -150,10 +141,13 @@ def checkEpisode(id):
 def search():
     q = request.args.get('q', None)
     series = ()
+    found_series = ()
     if q is None:
         flash('Please add more constraints to your search!', 'warning')
     elif len(q)<3:
         flash('Please enter at least 3 characters!', 'warning')
     else:
         series = Series.query.filter(Series.name.like(('%s%s%s' % ('%',q,'%')))).all()
-    return render_template('search.html', q=q, series=series)
+        if current_user.is_authenticated():
+            found_series = searchFor(q)
+    return render_template('search.html', q=q, series=series, found_series=found_series)

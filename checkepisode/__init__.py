@@ -1,10 +1,17 @@
 from flask import Flask, flash, request, session, render_template, g, jsonify, current_app
 from flask.ext.mail import Mail
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.security import Security
+from flask.ext.security.datastore import SQLAlchemyUserDatastore
 import os
 
 app = Flask(__name__)
 app.config.from_object('config')
 app.secret_key = app.config['SECRET_KEY']
+
+db = SQLAlchemy(app)
+from models import User, Role
+Security(app, SQLAlchemyUserDatastore(db, User, Role), registerable=False)
 
 app.mail = Mail(app)
 
