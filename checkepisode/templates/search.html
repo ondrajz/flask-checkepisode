@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+{% from "macros.html" import render_status %}
 <div class="row">
     <div class="span12">
         <legend>
@@ -48,9 +49,7 @@
                             <td width="90px"><a href="/series/{{ s.id }}"><img src="{% if s.poster %}/static/series/{{ s.poster }}{% else %}/static/img/noposter.png{% endif %}" width="85" heigth="125"></a></td>
                             <td><a href="/series/{{ s.id }}">{{ s.name }}</a></td>
                             <td>{% if s.first_aired %}{{ date_string_my(s.first_aired|to_date) }}{% else %}Unknown{% endif %}</td>
-                            <td>{% if s.status.caption == "Continuing" %}
-                                <span style="margin-left: 0;" class="label label-success">{{ s.status.caption }}</span>
-                            {% endif %}</td> 
+                            <td>{{ render_status(s.status) }}</td> 
                             </tr>
                         {% endfor %}
                         </tbody>

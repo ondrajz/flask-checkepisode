@@ -11,3 +11,15 @@
     {% endif %}
     </div>
 {% endmacro %}
+
+{% macro render_status(status) %}
+    {% if not status %}
+        <span style="margin-left: 0;" class="label label-default">Unknown</span>
+    {% elif status.caption == "Continuing" %}
+        <span style="margin-left: 0;" class="label label-success">{{ status.caption }}</span>
+    {% elif status.caption == "Ended" %}
+        <span style="margin-left: 0;" class="label label-important">{{ status.caption }}</span>
+    {% else %}
+        <span style="margin-left: 0;" class="label label-default">{{ status.caption }}</span>
+    {% endif %}
+{% endmacro %}

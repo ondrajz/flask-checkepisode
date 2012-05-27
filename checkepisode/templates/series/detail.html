@@ -4,6 +4,7 @@
 {% endblock %}
 
 {% block content %}
+{% from "macros.html" import render_status %}
 <div class="page-header">
     <h1>{{ series.name }}</h1>
 </div>
@@ -29,13 +30,7 @@
                         </td>
                     </tr><tr>
                         <td><b>Status:</b></td>
-                        <td>{% if series.status %}
-                        {% if series.status.caption == "Continuing" %}
-                            <span style="margin-left: 0;" class="label label-success">{{ series.status.caption }}</span>
-                        {% endif %}
-                        {% else %}
-                            <span style="margin-left: 0;" class="label label-default">Unknown</span>
-                        {% endif %}</td>
+                        <td>{{ render_status(series.status) }}</td>
                     </tr><tr>
                         <td><b>Started airing:</b></td>
                         <td>{{ date_string_my(series.first_aired|to_date) }}</td>
