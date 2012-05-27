@@ -11,10 +11,11 @@ def searchFor(name, all = False):
     tvxml = et.fromstring(xml)
     found_series = tvxml.findall('Series')
     for series in found_series:
-        sId = int(series.findtext('seriesid'))
-        if all or (not all and Series.query.filter_by(tvdb_id=sId).count()==0):
-            sName = series.findtext('SeriesName')
-            sFirstAired = series.findtext('FirstAired')
-            sOverview = series.findtext('Overview')
-            results.append({'name': sName, 'id': sId, 'first_aired': sFirstAired, 'overview': sOverview})
+        id = int(series.findtext('seriesid'))
+        if all or (not all and Series.query.filter_by(tvdb_id=id).count()==0):
+            name = series.findtext('SeriesName')
+            first_aired = series.findtext('FirstAired')
+            overview = series.findtext('Overview')
+            banner = series.findtext('banner')
+            results.append({'name': name, 'tvdb_id': id, 'first_aired': first_aired, 'overview': overview, 'banner': banner})
     return results
