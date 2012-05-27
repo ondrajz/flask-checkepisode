@@ -57,8 +57,14 @@ def getGenres(genre):
 def updateSeries(series, xmlSeries):
     if series and xmlSeries is not None:
         print "- - - - - - - - - - - - - - - - - - -"
-        print "Updating series info, id = %s" % series.name
+        print "Updating series info, id = %s" % series.tvdb_id
         # -----------------------
+        name = xmlSeries.findtext("SeriesName")
+        if name:
+            if PRINT_COLUMN_DETAIL: print "Saving name.."
+            series.name = name
+            if INSTANT_COMMIT: db.session.commit() 
+        # = = =
         overview = xmlSeries.findtext("Overview")
         if overview:
             if PRINT_COLUMN_DETAIL: print "Saving overview.."

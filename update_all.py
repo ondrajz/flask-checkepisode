@@ -4,25 +4,6 @@ import urllib
 import zipfile
 import os
 from updater import *
-
-def getIdFor(name):
-    print "Retrieving ID for %s" % name
-    filehandle = urllib.urlopen("%sapi/GetSeries.php?seriesname=%s" % (MIRROR, urllib.quote(name)))
-    xml = filehandle.read()
-    try:
-        tvxml = et.fromstring(xml)
-        series = tvxml.find('Series')
-        if series is not None:
-            serName = series.findtext('SeriesName')
-            if serName == name:
-                sId = int(series.findtext('seriesid'))
-                print "Found id = %d" % sId
-                return sId
-            else:
-                print 'Id not found'
-    except:
-        print "Failed parsing id info: \n%s" % xml
-    return None
     
 def getInfoFile(ser_id):
     d = '%s/seriesZip' % os.getcwd()
@@ -82,16 +63,14 @@ series = Series.query.all()
 print "Checking %d series for missing id\n" % len(series)
 for s in series:
     print "Checking %s" % s.name
-    if not s.tvdb_id:
+    if not s.last_update:
         print "------------------------------------------------"
-        print "Missing ID"
-        newId = getIdFor(s.name)
-        if newId:
-            print "Saving ID"
-            s.tvdb_id = newId
-            db.session.commit()
+        print "First update"
+        if s.tvdb_id:
             getAllInfo(s)
             print "Committing to database.."
             db.session.commit()
+        else:
+            print "Missing ID!"
         print "------------------------------------------------\n"
 print "Checking series finished"
