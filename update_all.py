@@ -63,7 +63,7 @@ def getAllInfo(series):
         print "\nRetrieving info finished\n"
 
 series = Series.query.all()
-print "Checking %d series for missing id\n" % len(series)
+print "Checking %d series\n" % len(series)
 for s in series:
     print "Checking %s" % s.name
     if not s.last_update:
