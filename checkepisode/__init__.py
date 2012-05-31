@@ -4,6 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security
 from flask.ext.security.datastore import SQLAlchemyUserDatastore
 import os
+import datetime
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -40,7 +41,7 @@ def before_first_request():
         current_app.security.datastore.create_role(name='admin')
         current_app.security.datastore.create_role(name='user')
         current_app.security.datastore.create_user(name='admin', email='admin@admin.com',
-                                                    password='admin', roles=['admin'], active=True)
+                                                    password='admin', roles=['admin'], active=True, confirmed_at=datetime.utcnow())
 
 @app.before_request
 def load_json():
