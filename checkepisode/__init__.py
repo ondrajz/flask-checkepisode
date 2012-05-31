@@ -4,7 +4,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.security import Security
 from flask.ext.security.datastore import SQLAlchemyUserDatastore
 import os
-import datetime
+from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object('config')
