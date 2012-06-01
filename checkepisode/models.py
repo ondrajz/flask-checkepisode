@@ -152,7 +152,14 @@ class Episode(db.Model):
         t = self.series.airs_time
         if t is None:
             t = '12:00AM'
-        return datetime.strptime('%s %s'%(self.air_time, t), '%Y%m%d %I:%M%p')
+        try:
+            d = datetime.strptime('%s %s'%(self.air_time, t), '%Y%m%d %I:%M%p')
+        except:
+            try:
+                d = datetime.strptime('%s %s'%(self.air_time, t), '%Y%m%d %H:%M')
+            except:
+                d = None
+        return d
         
     @property
     def represent(self):
