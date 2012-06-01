@@ -45,7 +45,7 @@ def getInfoFile(ser_id):
     
 def getAllInfo(series):
     if series:
-        print "\nRetrieving all info about %d" % series.tvdb_id
+        print "\nRetrieving all info about %s [%d]" % (series.name, series.tvdb_id)
         info = getInfoFile(series.tvdb_id)
         if os.path.isfile(info):
             print "Parsing en.xml"
@@ -57,7 +57,7 @@ def getAllInfo(series):
             print "\nFound %d episodes" % len(xmlEpisodes)
             x = 1
             for xmlEpisode in xmlEpisodes:
-                print "- - - - - - - - - - - - - - - - - - -\nupdating %d/%d" % (x, len(xmlEpisodes))
+                print "- - - - - - - - - - - - - - - - - - -\n%s - updating %d/%d" % (series.name, x, len(xmlEpisodes))
                 x = x + 1
                 updateEpisode(xmlEpisode)
         print "\nRetrieving info finished\n"
