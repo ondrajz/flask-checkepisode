@@ -78,12 +78,12 @@
                     <span class="icon-bar"></span>
                     </a>
                     <a href="/" class="brand"><span style="color: #46a546">Check</span><span style="color: #049cdb">Episode</span></a>
-
                     <div class="nav-collapse">
                         <ul class="nav">
                             {% if current_user and current_user.is_authenticated() %}
-                            <li class="active"><a href="/watchlist">Watchlist</a></li>
+                            <li {% if active_page == "watchlist" %}class="active"{% endif %}><a href="/watchlist">Watchlist</a></li>
                             {% endif %}
+                            <li {% if active_page == "hot" %}class="active"{% endif %}><a href="/hot">Hot shows</a></li>
                         </ul>
                         
                         <form class="navbar-search pull-left" action="/search">

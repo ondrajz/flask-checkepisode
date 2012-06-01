@@ -190,3 +190,10 @@ def search():
         if current_user.is_authenticated():
             found_series = searchFor(q)[:10]
     return render_template('search.html', q=q, series=series, found_series=found_series)
+
+@app.route('/hot')
+def hotShows():
+    create_token()
+    sub = db.session.query(favorite_series.c.series_id, func.count(favorite_series.c.user_id).label('count')).group_by(favorite_series.c.series_id).subquery()
+    shows = db.session.query(Series, sub.c.count).outerjoin(sub, Series.id == sub.c.series_id).order_by(db.desc('count'))
+    return render_template('hot.html', shows=shows, today=datetime.now())
