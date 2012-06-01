@@ -35,14 +35,6 @@ import login
 import views
 import logger
 
-@app.before_first_request
-def before_first_request():
-    if User.query.count() == 0:
-        current_app.security.datastore.create_role(name='admin')
-        current_app.security.datastore.create_role(name='user')
-        current_app.security.datastore.create_user(name='admin', email='admin@admin.com',
-                                                    password='admin', roles=['admin'], active=True, confirmed_at=datetime.utcnow())
-
 @app.before_request
 def load_json():
     g.json = request.is_xhr
