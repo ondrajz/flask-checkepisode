@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% set active_page = "hot" %}
+
+{% block extrahead %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div style="width: 900px; margin: 0 auto;">
+    
+        <ul class="thumbnails">
+        {% for s in shows[0:3] %}
+        <li class="span3">
+            <div class="thumbnail">
+                <a class="thumbnail" href="/series/{{ s[0].id }}">
+                <img alt="" src="/static/series/{{ s[0].poster }}">
+                </a>
+                <div class="caption">
+                <h5>{{ s[0].name }}</h5>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+<div class="row">
+    {% for s in shows[3:9] %}
+        <div class="span2">
+            <div class="thumbnail">
+                <a class="thumbnail" href="/series/{{ s[0].id }}">
+                <img alt="" src="/static/series/{{ s[0].poster }}">
+                </a>
+                <div class="caption">
+                <h5>{{ s[0].name }}</h5>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<div class="row">
+    {% for s in shows[8:14] %}
+        <div class="span2">
+            <div class="thumbnail">
+                <a class="thumbnail" href="/series/{{ s[0].id }}">
+                <img alt="" src="/static/series/{{ s[0].poster }}">
+                </a>
+                <div class="caption">
+                <h5>{{ s[0].name }}</h5>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
