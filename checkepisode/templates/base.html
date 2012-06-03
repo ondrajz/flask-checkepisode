@@ -133,13 +133,15 @@
                 {% endif %}
             {% endwith %}
             {% block content %}{% endblock %}
+            {% block footer %}
                 <hr>
                 <!-- Footer
                 ================================================== -->
                 <footer class="footer" style="margin: 0 24px 20px;">
                     <p>CheckEpisode.com © Copyright 2012</p>
                 </footer>
-                </div>
+            {% endblock %}
+        </div>
         
         <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
