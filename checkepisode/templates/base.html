@@ -102,18 +102,23 @@
                                 </ul>
                             </div>
                         {% else %}
-                            <a href="/login" class="btn">
+                            <div class="btn-group">
+                            <a href="/login" class="btn btn-success">
                                 <i class="icon-user"></i> Log in
                             </a>
-                            or <a class="nav-link" href="/register">register</a>
+                            <a href="/register" class="btn btn-primary">
+                                <i class="icon-pencil"></i> Sign up
+                            </a>
+                            </div>
                         {% endif %}
                         </div>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
         </div>
-        
+        {% block container %}
         <div class="container">
+        {% endblock %}
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                 <div class="row">
@@ -128,17 +133,13 @@
                 {% endif %}
             {% endwith %}
             {% block content %}{% endblock %}
-            <div class="row">
-                <div class="span12">
                 <hr>
                 <!-- Footer
                 ================================================== -->
-                <footer class="footer" style="margin-bottom: 20px;">
-                <p>CheckEpisode.com © Copyright 2012</p>
+                <footer class="footer" style="margin: 0 24px 20px;">
+                    <p>CheckEpisode.com © Copyright 2012</p>
                 </footer>
                 </div>
-            </div>
-        </div>
         
         <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
