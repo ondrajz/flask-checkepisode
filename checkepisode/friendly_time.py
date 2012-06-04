@@ -14,6 +14,8 @@ def friendly_time(dt, past_="ago",
     or "time until" e.g.
     3 days ago, 5 hours from now etc.
     """
+    if dt is None:
+        return "Unknown"
 
     now = datetime.now()
     if now > dt:
