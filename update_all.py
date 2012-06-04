@@ -11,7 +11,7 @@ def getInfoFile(ser_id):
         print "Creating %s" % d
         os.makedirs(d)
     if ser_id:
-        print "Checking zipfile for %s" % ser_id
+        if PRINT_DETAIL: print "Checking zipfile for %s" % ser_id
         tvdbZip = "seriesZip/%s.zip" % ser_id
         folder = "seriesZip/%s" % ser_id
         info = "%s/en.xml" % folder
@@ -40,40 +40,40 @@ def getInfoFile(ser_id):
                 z = zipfile.ZipFile(tvdbZip, 'r')
                 z.extractall(folder)
         else:
-            print "found en.xml"
+            printDetail("Found en.xml")
         return info
     
 def getAllInfo(series):
     if series:
-        print "\nRetrieving all info about %s [%d]" % (series.name, series.tvdb_id)
+        printDetail("Retrieving all info about %s [%d]" % (series.name, series.tvdb_id))
         info = getInfoFile(series.tvdb_id)
         if os.path.isfile(info):
-            print "Parsing en.xml"
+            printDetail("Parsing en.xml")
             tvxml = et.parse(info)
             xmlSeries = tvxml.find('Series')
             if xmlSeries is not None:
                 updateSeries(series, xmlSeries)
             xmlEpisodes = tvxml.findall('Episode')
-            print "\nFound %d episodes" % len(xmlEpisodes)
+            print "Found %d episodes" % len(xmlEpisodes)
+            printDetail("- - - - - - - - - - - - - - - - - - -")
             x = 1
             for xmlEpisode in xmlEpisodes:
-                print "- - - - - - - - - - - - - - - - - - -\n%s - updating %d/%d" % (series.name, x, len(xmlEpisodes))
+                printDetail("\n%d/%d episode of %s[%s]" % (x, len(xmlEpisodes), series.name, series.tvdb_id))
                 x = x + 1
                 updateEpisode(xmlEpisode)
-        print "\nRetrieving info finished\n"
+        printDetail("\nRetrieving info finished\n")
 
 series = Series.query.all()
 print "Checking %d series\n" % len(series)
 for s in series:
-    print "Checking %s" % s.name
+    printDetail("Checking %s[%s]" % (s.name, s.tvdb_id))
     if not s.last_update:
-        print "------------------------------------------------"
-        print "First update"
+        printDetail("------------------------------------------------")
         if s.tvdb_id:
             getAllInfo(s)
             print "Committing to database.."
             db.session.commit()
         else:
-            print "Missing ID!"
-        print "------------------------------------------------\n"
+            print "Missing tvdb_id!"
+        printDetail("------------------------------------------------\n")
 print "Checking series finished"

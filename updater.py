@@ -1,10 +1,14 @@
 from config import API_KEY, MIRROR, REMOVE_OLD, \
-                INSTANT_COMMIT, PRINT_COLUMN_DETAIL, REMOVE_OLD_IMAGES, IMAGE_FOLDER
+                PRINT_DETAIL, REMOVE_OLD_IMAGES, \
+                IMAGE_FOLDER, LAST_UPDATE
 from checkepisode.models import *
 from xml.etree import ElementTree as et
 from datetime import datetime
 import os
 import urllib
+
+def printDetail(msg):
+    if PRINT_DETAIL: print msg
 
 def getLanguage_id(lang):
     old = Language.query.filter_by(caption=lang).first()
@@ -50,96 +54,82 @@ def getGenres(genre):
     
 def updateSeries(series, xmlSeries):
     if series and xmlSeries is not None:
-        print "- - - - - - - - - - - - - - - - - - -"
-        print "Updating series info, id = %s" % series.tvdb_id
+        printDetail("- - - - - - - - - - - - - - - - - - -")
+        print "Updating series %s[%s]" % (series.name, series.tvdb_id)
         # -----------------------
         name = xmlSeries.findtext("SeriesName")
         if name:
-            if PRINT_COLUMN_DETAIL: print "Saving name.."
+            printDetail("Name = %s" % name)
             series.name = name
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         overview = xmlSeries.findtext("Overview")
         if overview:
-            if PRINT_COLUMN_DETAIL: print "Saving overview.."
+            printDetail("Overview = %s..." % overview[0:25])
             series.overview = overview
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         lang = xmlSeries.findtext("Language")
         if lang:
-            if PRINT_COLUMN_DETAIL: print "Saving language.."
+            printDetail("Language = %s" % lang)
             series.language = getLanguage_id(lang)
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         first_air = xmlSeries.findtext("FirstAired")
         if first_air:
-            if PRINT_COLUMN_DETAIL: print "Saving first aired.."
+            printDetail("First aired = %s" % first_air)
             series.first_aired = first_air.replace('-', '')
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         air_dow = xmlSeries.findtext("Airs_DayOfWeek")
         if air_dow:
-            if PRINT_COLUMN_DETAIL: print "Saving airs day of week.."
+            printDetail("Day of week = %s" % air_dow)
             series.airs_dow = air_dow[:2]
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         air_time = xmlSeries.findtext("Airs_Time")
         if air_time:
-            if PRINT_COLUMN_DETAIL: print "Saving air time.."
+            printDetail("Air time = %s" % air_time)
             series.airs_time = air_time.replace(' ', '')
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         genre = xmlSeries.findtext("Genre")
         if genre:
-            if PRINT_COLUMN_DETAIL: print "Saving genres.."
+            printDetail("Genres = %s" % genre)
             series.genre = getGenres(genre)
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         imdb = xmlSeries.findtext("IMDB_ID")
         if imdb:
-            if PRINT_COLUMN_DETAIL: print "Saving imdb id.."
+            printDetail("imdb = %s" % imdb)
             series.imdb_id = imdb
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         network = xmlSeries.findtext("Network")
         if network:
-            if PRINT_COLUMN_DETAIL: print "Saving network.."
+            printDetail("Network = %s" % network)
             series.network = getNetwork_id(network)
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         rating = xmlSeries.findtext("Rating")
         if rating:
-            if PRINT_COLUMN_DETAIL: print "Saving tvdb rating.."
+            printDetail("Rating = %s" % rating)
             series.tvdb_rating = rating
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         rateCount = xmlSeries.findtext("RatingCount")
         if rateCount:
-            if PRINT_COLUMN_DETAIL: print "Saving tvdb rate count.."
+            printDetail("Rate count = %s" % rateCount)
             series.tvdb_ratecount = rateCount
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         runtime = xmlSeries.findtext("Runtime")
         if runtime:
-            if PRINT_COLUMN_DETAIL: print "Saving runtime.."
+            printDetail("Runtime = %s" % runtime)
             series.runtime = runtime
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         status = xmlSeries.findtext("Status")
         if status:
-            if PRINT_COLUMN_DETAIL: print "Saving status.."
+            printDetail("Status = %s" % status)
             series.status = getStatus_id(status)
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         last = xmlSeries.findtext("lastupdated")
         if last:
-            if PRINT_COLUMN_DETAIL: print "Saving last update.."
+            printDetail("Last update = %s" % last)
             series.last_update = last
-            if INSTANT_COMMIT: db.session.commit() 
         # = = =
         banner = xmlSeries.findtext("banner")
         if banner:
-            if PRINT_COLUMN_DETAIL: print "Saving banner.."
+            printDetail("Banner = %s" % banner)
             series.banner = banner
             image_file = "%s%s" % (IMAGE_FOLDER, banner)
             dir_path = os.path.dirname(image_file)
@@ -147,16 +137,15 @@ def updateSeries(series, xmlSeries):
                 print "Creating %s" % dir_path
                 os.makedirs(dir_path)
             if os.path.isfile(image_file) and REMOVE_OLD_IMAGES:
-                if PRINT_COLUMN_DETAIL: print "Removing old banner"
+                printDetail("Removing old banner")
                 os.remove(image_file)
             if not os.path.isfile(image_file):
-                if PRINT_COLUMN_DETAIL: print "Downloading banner"
+                printDetail("Downloading banner")
                 urllib.urlretrieve('%sbanners/%s' % (MIRROR, banner), image_file)
-            if INSTANT_COMMIT: db.session.commit()
         # = = =
         poster = xmlSeries.findtext("poster")
         if poster:
-            if PRINT_COLUMN_DETAIL: print "Saving poster.."
+            printDetail("Poster = %s" % poster)
             series.poster = poster
             image_file = "%s%s" % (IMAGE_FOLDER, poster)
             dir_path = os.path.dirname(image_file)
@@ -164,13 +153,13 @@ def updateSeries(series, xmlSeries):
                 print "Creating %s" % dir_path
                 os.makedirs(dir_path)
             if os.path.isfile(image_file) and REMOVE_OLD_IMAGES:
-                if PRINT_COLUMN_DETAIL: print "Removing old poster"
+                printDetail("Removing old poster")
                 os.remove(image_file)
             if not os.path.isfile(image_file):
-                if PRINT_COLUMN_DETAIL: print "Downloading poster"
+                printDetail("Downloading poster")
                 urllib.urlretrieve('%sbanners/%s' % (MIRROR, poster), image_file)
-            if INSTANT_COMMIT: db.session.commit()
         # -----------------------
+        printDetail("- - - - - - - - - - - - - - - - - - -")
     
 def getEpisode(epID, serID):
     old = Episode.query.filter_by(tvdb_id=epID).first()
@@ -190,64 +179,56 @@ def updateEpisode(xmlEpisode):
     if xmlEpisode is not None:
         epID = xmlEpisode.findtext("id")
         serID = xmlEpisode.findtext("seriesid")
-        print "- - - - - - - - - - - - - - - - - - -"
-        print "Checking episode id = %s, seriesid = %s" % (epID, serID)
+        printDetail("- - - - - - - - - - - - - - - - - - -")
+        printDetail("Checking episode id = %s, seriesid = %s" % (epID, serID))
         if epID and serID:
             episode = getEpisode(epID, serID)
             if episode:
-                print "Updating episode info"
+                printDetail("Updating episode")
                 # -----------------------
                 epName = xmlEpisode.findtext("EpisodeName")
                 if epName:
-                    if PRINT_COLUMN_DETAIL: print "Saving episode name.."
+                    printDetail("Name = %s" % epName)
                     episode.name = epName
-                    if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 air_time = xmlEpisode.findtext("FirstAired")
                 if air_time:
-                    if PRINT_COLUMN_DETAIL: print "Saving airing time.."
+                    printDetail("Airing time = %s" % air_time)
                     episode.air_time = air_time.replace('-', '')
-                    if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 seas_num = xmlEpisode.findtext("SeasonNumber")
                 if seas_num:
-                    if PRINT_COLUMN_DETAIL: print "Saving season number.."
+                    printDetail("Season number = %s" % seas_num)
                     episode.seas_num = seas_num
-                    if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 epis_num = xmlEpisode.findtext("EpisodeNumber")
                 if epis_num:
-                    if PRINT_COLUMN_DETAIL: print "Saving episode number.."
+                    printDetail("Episode number = %s" % epis_num)
                     episode.epis_num = epis_num
-                    if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 overview = xmlEpisode.findtext("Overview")
                 if overview:
-                    if PRINT_COLUMN_DETAIL: print "Saving overview.."
+                    printDetail("Overview = %s..." % overview[0:25])
                     episode.overview = overview
-                    if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 tvdb_rating = xmlEpisode.findtext("Rating")
                 if tvdb_rating:
-                    if PRINT_COLUMN_DETAIL: print "Saving tvdb rating.."
+                    printDetail("Rating = %s" % tvdb_rating)
                     episode.tvdb_rating = tvdb_rating
-                    if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 tvdb_ratecount = xmlEpisode.findtext("RatingCount")
                 if tvdb_ratecount:
-                    if PRINT_COLUMN_DETAIL: print "Saving tvdb rate count.."
+                    printDetail("Rate count = %s" % tvdb_ratecount)
                     episode.tvdb_ratecount = tvdb_ratecount
-                    if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 last_update = xmlEpisode.findtext("lastupdated")
                 if last_update:
-                    if PRINT_COLUMN_DETAIL: print "Saving last update.."
+                    printDetail("Last update = %s" % last_update)
                     episode.last_update = last_update
-                    if INSTANT_COMMIT: db.session.commit() 
                 # = = =
                 graphic = xmlEpisode.findtext("filename")
                 if graphic:
-                    if PRINT_COLUMN_DETAIL: print "Saving graphic.."
+                    printDetail("Graphic = %s" % graphic)
                     episode.graphic = graphic
                     image_file = "%s%s" % (IMAGE_FOLDER, graphic)
                     dir_path = os.path.dirname(image_file)
@@ -255,12 +236,13 @@ def updateEpisode(xmlEpisode):
                         print "Creating %s" % dir_path
                         os.makedirs(dir_path)
                     if os.path.isfile(image_file) and REMOVE_OLD_IMAGES:
-                        if PRINT_COLUMN_DETAIL: print "Removing old graphic"
+                        printDetail("Removing old graphic")
                         os.remove(image_file)
                     if not os.path.isfile(image_file):
-                        if PRINT_COLUMN_DETAIL: print "Downloading graphic"
+                        printDetail("Downloading graphic")
                         urllib.urlretrieve('%sbanners/%s' % (MIRROR, graphic), image_file)
-                    if INSTANT_COMMIT: db.session.commit() 
                 # -----------------------
             else:
-                print "Episode's series not in database"
+                printDetail("Episode's series not in database")
+        # -----------------------
+        printDetail("- - - - - - - - - - - - - - - - - - -")
