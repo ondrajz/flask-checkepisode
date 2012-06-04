@@ -62,6 +62,9 @@ def index():
 def watchlist():
     create_token()
     episodes = Episode.query.filter(Episode.series_id.in_(x.id for x in current_user.favorite_series)).filter(Episode.air_time!=None).order_by(Episode.air_time)
+    if episodes.count()<=0:
+        flash('You have no shows in your watchlist! Add some of the popular ones or use search!', 'warning')
+        return redirect(url_for('hotShows'))
     aired_eps = []
     upcoming_eps = []
     for e in episodes:
