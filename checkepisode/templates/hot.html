@@ -16,7 +16,8 @@
                 <img alt="" src="/static/series/{{ s[0].poster }}">
                 </a>
                 <div class="caption">
-                <h5>{{ s[0].name }}</h5>
+                    <h5>{{ s[0].name }}</h5>
+                <p>{{ s[1] }} fans</p>
                 </div>
             </div>
         </li>
@@ -32,12 +33,14 @@
                 <img alt="" src="/static/series/{{ s[0].poster }}">
                 </a>
                 <div class="caption">
-                <h5>{{ s[0].name }}</h5>
+                    <h5>{{ s[0].name }}</h5>
+                <p>{{ s[1] }} fans</p>
                 </div>
             </div>
         </div>
     {% endfor %}
 </div>
+<br>
 <div class="row">
     {% for s in shows[8:14] %}
         <div class="span2">
@@ -46,7 +49,8 @@
                 <img alt="" src="/static/series/{{ s[0].poster }}">
                 </a>
                 <div class="caption">
-                <h5>{{ s[0].name }}</h5>
+                    <h5>{{ s[0].name }}</h5>
+                <p>{{ s[1] }} fans</p>
                 </div>
             </div>
         </div>
