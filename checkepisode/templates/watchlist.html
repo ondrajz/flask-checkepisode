@@ -72,7 +72,7 @@
                 {% for ep in upcoming_eps %}
                     <tr>
                         <td><a href="/series/{{ ep.series.id }}"><b>{{ ep.series.name }}</b></a></td>
-                        <td>{{ epNum(ep.seas_num, ep.epis_num) }}</td>
+                        <td>{{ ep.represent }}</td>
                         <td><a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
                         <td>
                         {% if ep.air_time %}
