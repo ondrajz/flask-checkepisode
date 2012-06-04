@@ -21,6 +21,7 @@
         <div class="well">
             <table class="table" style="margin-bottom: 0;">
                 <tbody>
+                    {% if episode.aired %}
                     <tr>
                         <td class="table-top" style="vertical-align: middle;"><b>Watched:</b></td>
                         <td class="table-top" style="padding-left: 0;">
@@ -32,9 +33,10 @@
                           <img src="/static/img/loading.gif" style="display: none;">
                         </td>
                     </tr>
+                    {% endif %}
                     <tr>
-                        <td><b>Airing:</b></td>
-                        <td>{{ episode.runtime|friendly_time }}</td>
+                        <td {% if not episode.aired %}class="table-top"{% endif %}><b>Airing:</b></td>
+                        <td {% if not episode.aired %}class="table-top"{% endif %}>{{ episode.runtime|friendly_time }}</td>
                     </tr><tr>
                         <td><b>Air date:</b></td>
                         <td>{{ date_string(episode.runtime) }}</td>

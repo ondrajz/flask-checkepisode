@@ -164,3 +164,11 @@ class Episode(db.Model):
     @property
     def represent(self):
         return u'S%02dE%02d' % (self.seas_num, self.epis_num)
+        
+    @property
+    def aired(self):
+        if self.runtime is None:
+            return False
+        if self.runtime<datetime.now():
+            return True
+        return False
