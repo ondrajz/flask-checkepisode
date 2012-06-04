@@ -39,7 +39,7 @@ def register():
             send_confirmation_instructions(user)
             
         # Login the user if allowed
-        flash('Your account was created, you can login now.', 'success')
-        return redirect(url_for('login'))
+        flash('Your account has been created, please check your email to verify.', 'success')
+        return redirect(url_for('index'))
 
     return render_template('register.html', form=form)
