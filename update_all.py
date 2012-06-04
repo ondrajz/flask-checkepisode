@@ -11,7 +11,7 @@ def getInfoFile(ser_id):
         print "Creating %s" % d
         os.makedirs(d)
     if ser_id:
-        if PRINT_DETAIL: print "Checking zipfile for %s" % ser_id
+        printDetail("Checking zipfile for %s" % ser_id)
         tvdbZip = "seriesZip/%s.zip" % ser_id
         folder = "seriesZip/%s" % ser_id
         info = "%s/en.xml" % folder
