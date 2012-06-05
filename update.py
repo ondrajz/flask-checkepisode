@@ -2,6 +2,7 @@ from checkepisode.models import *
 from updater import *
 import os, sys
 import urllib
+from datetime import datetime
 
 def getSeriesXml(serID):
     if serID:
@@ -29,7 +30,7 @@ updFile = open(LAST_UPDATE, 'r')
 last_time = int(updFile.readline())
 updFile.close()
 
-print "Updating\nlast update = %s" % last_time
+print "Starting update - %s\nlast update = %s" % (datetime.now().strftime('%H:%M %d-%m-%Y'), last_time)
 print "------------------------------------------------"
 filehandle = urllib.urlopen('%sapi/Updates.php?type=all&time=%s' % (MIRROR, last_time))
 tvxml = et.fromstring(filehandle.read())

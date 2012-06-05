@@ -4,6 +4,7 @@ import urllib
 import zipfile
 import os
 from updater import *
+from datetime import datetime
     
 def getInfoFile(ser_id):
     d = '%s/seriesZip' % os.getcwd()
@@ -64,6 +65,7 @@ def getAllInfo(series):
         printDetail("\nRetrieving info finished\n")
 
 series = Series.query.all()
+print "Starting update_all - %s" % datetime.now().strftime('%H:%M %d-%m-%Y')
 print "Checking %d series\n" % len(series)
 for s in series:
     printDetail("Checking %s[%s]" % (s.name, s.tvdb_id))
@@ -76,4 +78,4 @@ for s in series:
         else:
             print "Missing tvdb_id!"
         printDetail("------------------------------------------------\n")
-print "Checking series finished"
+print "\nChecking series finished"
