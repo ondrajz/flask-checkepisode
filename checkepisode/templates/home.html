@@ -4,47 +4,37 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="span12">
-        <legend>
-            Upcoming episodes
-        </legend>
-        <header class="jumbotron subhead">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Series</th>
-                    <th>Number</th>
-                    <th>Episode name</th>
-                    <th>Time</th>
-                    <th>Air time</th>
-                    <th>Search</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ep in episodes %}
-                    <tr>
-                        <td><a href="/series/{{ ep.series.id }}"><b>{{ ep.series.name }}</b></a></td>
-                        <td>{{ ep.represent }}</td>
-                        <td><a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
-                        <td>
-                        {% if ep.air_time %}
-                            {% if ep.runtime<today %}
-                            <span style="margin-left: 0;" class="label label-success">{{ ep.runtime|friendly_time }}</span>
-                            {% else %}
-                            <span style="margin-left: 0;" class="label label-warning">{{ ep.runtime|friendly_time }}</span>
-                            {% endif %}
-                        {% else %}
-                            Unknown
-                        {% endif %}
-                        </td>
-                        <td>{{ date_string(ep.runtime) }}</td>
-                        <td><a href="http://thepiratebay.se/search/{{ ep.series.name|safe_url }} {{ ep.represent|safe_url }}/0/7/0"><img src="http://thepiratebay.se/favicon.ico"></a></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        </header>
+<div style="width: 900px; margin: 0 auto;">
+    <div style="padding:30px">
+        <h1>
+            CheckEpisode.com
+        </h1>
+
+        <p>Keep track of your favorite tv series! Check episodes on <a href="http://checkepisode.com/">checkepisode.com</a></p>
+
+    </div>
+    <div class="row">
+            <div class="span3">
+                <h2>Track</h2>
+                <p>
+                Track your favorite series, watch listings.
+                </p>
+            </div>
+            <div class="span3">
+                <h2>Search</h2>
+                <p>
+                Search link for episodes as a nice shortcut.
+                </p>
+            </div>
+            <div class="span3">
+                <h2>Check</h2>
+                <p>
+                Check and rate watched episodes.
+                </p>
+            </div>
     </div>
 </div>
-{% endblock %}`
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

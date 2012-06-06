@@ -5,9 +5,10 @@ from checkepisode import app
 
 from datetime import datetime
 
+
 @app.template_filter()
-def friendly_time(dt, past_="ago", 
-    future_="to go", 
+def friendly_time(dt, past_="ago",
+    future_="to go",
     default="just now"):
     """
     Returns string representing "time since"
@@ -36,7 +37,7 @@ def friendly_time(dt, past_="ago",
     )
 
     for period, singular, plural in periods:
-        
+
         if period:
             return "%d %s %s" % (period, \
                 singular if period == 1 else plural, \

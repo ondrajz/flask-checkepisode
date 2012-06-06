@@ -1,12 +1,15 @@
+import urllib
+from xml.etree import ElementTree as et
+from datetime import datetime
 from checkepisode.models import *
 from updater import *
-import os, sys
-import urllib
-from datetime import datetime
+from config import API_KEY, MIRROR, LAST_UPDATE
+
 
 def getSeriesXml(serID):
     if serID:
-        filehandle = urllib.urlopen('%sapi/%s/series/%s/en.xml' % (MIRROR, API_KEY, serID))
+        filehandle = urllib.urlopen('%sapi/%s/series/%s/en.xml' \
+            % (MIRROR, API_KEY, serID))
         try:
             tvxml = et.fromstring(filehandle.read())
         except:
@@ -15,9 +18,11 @@ def getSeriesXml(serID):
         return tvxml.find('Series')
     return None
 
+
 def getEpisodeXml(epID):
     if epID:
-        filehandle = urllib.urlopen('%sapi/%s/episodes/%s/en.xml' % (MIRROR, API_KEY, epID))
+        filehandle = urllib.urlopen('%sapi/%s/episodes/%s/en.xml' \
+            % (MIRROR, API_KEY, epID))
         try:
             tvxml = et.fromstring(filehandle.read())
         except:
@@ -30,16 +35,19 @@ updFile = open(LAST_UPDATE, 'r')
 last_time = int(updFile.readline())
 updFile.close()
 
-print "Starting update - %s\nlast update = %s" % (datetime.now().strftime('%H:%M %d-%m-%Y'), last_time)
+print "Starting update - %s\nlast update = %s" \
+    % (datetime.now().strftime('%H:%M %d-%m-%Y'), last_time)
 print "------------------------------------------------"
-filehandle = urllib.urlopen('%sapi/Updates.php?type=all&time=%s' % (MIRROR, last_time))
+filehandle = urllib.urlopen('%sapi/Updates.php?type=all&time=%s' \
+    % (MIRROR, last_time))
 tvxml = et.fromstring(filehandle.read())
 
 new_update = tvxml.findtext("Time")
 series_updates = tvxml.findall('Series')
 episode_updates = tvxml.findall('Episode')
 
-print "%d series updates\n%d episode updates" % (len(series_updates), len(episode_updates))
+print "%d series updates\n%d episode updates" \
+    % (len(series_updates), len(episode_updates))
 
 x = 1
 print "------------------------------------------------"

@@ -16,10 +16,12 @@ roles_users = db.Table('roles_users',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('role_id', db.Integer, db.ForeignKey('role.id')))
 
+
 class Role(db.Model, RoleMixin):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
     description = db.Column(db.String(255))
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,7 +38,8 @@ class User(db.Model, UserMixin):
         backref=db.backref('users', lazy='dynamic'))
     watched_episodes = db.relationship('Episode', secondary=watched_episodes,
         backref=db.backref('users', lazy='dynamic'))
-        
+
+
 class Language(db.Model):
     __tablename__ = 'language'
     id = db.Column(db.Integer, primary_key=True)
@@ -47,7 +50,8 @@ class Language(db.Model):
 
     def __repr__(self):
         return '<Language %r>' % self.caption
-        
+
+
 class Network(db.Model):
     __tablename__ = 'network'
     id = db.Column(db.Integer, primary_key=True)
@@ -58,12 +62,13 @@ class Network(db.Model):
 
     def __repr__(self):
         return '<Network %r>' % self.caption
-        
+
 series_genres = db.Table('series_genres',
     db.Column('series_id', db.Integer, db.ForeignKey('series.id')),
     db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'))
 )
-        
+
+
 class Genre(db.Model):
     __tablename__ = 'genre'
     id = db.Column(db.Integer, primary_key=True)
@@ -74,7 +79,8 @@ class Genre(db.Model):
 
     def __repr__(self):
         return '<Genre %r>' % self.caption
-    
+
+
 class Status(db.Model):
     __tablename__ = 'status'
     id = db.Column(db.Integer, primary_key=True)
@@ -85,7 +91,8 @@ class Status(db.Model):
 
     def __repr__(self):
         return '<Status %r>' % self.caption
-        
+
+
 class Series(db.Model):
     __tablename__ = 'series'
     id = db.Column(db.Integer, primary_key=True)
@@ -120,7 +127,8 @@ class Series(db.Model):
 
     def __repr__(self):
         return '<Series %s>' % self.name
-        
+
+
 class Episode(db.Model):
     __tablename__ = 'episode'
     id = db.Column(db.Integer, primary_key=True)
@@ -135,7 +143,7 @@ class Episode(db.Model):
     tvdb_ratecount = db.Column(db.Integer)
     last_update = db.Column(db.Integer)
     graphic = db.Column(db.String(40))
-    
+
     series = db.relationship('Series',
         backref=db.backref('episodes', lazy='dynamic'))
 
@@ -144,7 +152,7 @@ class Episode(db.Model):
 
     def __repr__(self):
         return u'<Episode %d>' % self.tvdb_id
-        
+
     @property
     def runtime(self):
         if not isinstance(self.air_time, unicode):
@@ -153,22 +161,24 @@ class Episode(db.Model):
         if t is None:
             t = '12:00AM'
         try:
-            d = datetime.strptime('%s %s'%(self.air_time, t), '%Y%m%d %I:%M%p')
+            d = datetime.strptime('%s %s' % (self.air_time, t), \
+                '%Y%m%d %I:%M%p')
         except:
             try:
-                d = datetime.strptime('%s %s'%(self.air_time, t), '%Y%m%d %H:%M')
+                d = datetime.strptime('%s %s' % (self.air_time, t), \
+                    '%Y%m%d %H:%M')
             except:
                 d = None
         return d
-        
+
     @property
     def represent(self):
         return u'S%02dE%02d' % (self.seas_num, self.epis_num)
-        
+
     @property
     def aired(self):
         if self.runtime is None:
             return False
-        if self.runtime<datetime.now():
+        if self.runtime < datetime.now():
             return True
         return False

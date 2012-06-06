@@ -1,11 +1,13 @@
-from checkepisode.models import *
-from xml.etree import ElementTree as et
 import urllib
 import zipfile
 import os
-from updater import *
+from xml.etree import ElementTree as et
 from datetime import datetime
-    
+from updater import *
+from checkepisode.models import *
+from config import API_KEY, MIRROR, REMOVE_OLD
+
+
 def getInfoFile(ser_id):
     d = '%s/seriesZip' % os.getcwd()
     if not os.path.exists(d):
@@ -35,7 +37,8 @@ def getInfoFile(ser_id):
                 os.makedirs(folder)
         if not os.path.isfile(info):
             print "Retrieving zipfile for %s" % ser_id
-            urllib.urlretrieve('%sapi/%s/series/%d/all/en.zip' % (MIRROR, API_KEY, ser_id), tvdbZip)
+            urllib.urlretrieve('%sapi/%s/series/%d/all/en.zip' \
+                % (MIRROR, API_KEY, ser_id), tvdbZip)
             if os.path.isfile(tvdbZip):
                 print "Extracting files from %s" % tvdbZip
                 z = zipfile.ZipFile(tvdbZip, 'r')
@@ -43,10 +46,12 @@ def getInfoFile(ser_id):
         else:
             printDetail("Found en.xml")
         return info
-    
+
+
 def getAllInfo(series):
     if series:
-        printDetail("Retrieving all info about %s [%d]" % (series.name, series.tvdb_id))
+        printDetail("Retrieving all info about %s [%d]" \
+            % (series.name, series.tvdb_id))
         info = getInfoFile(series.tvdb_id)
         if os.path.isfile(info):
             printDetail("Parsing en.xml")
@@ -59,7 +64,8 @@ def getAllInfo(series):
             printDetail("- - - - - - - - - - - - - - - - - - -")
             x = 1
             for xmlEpisode in xmlEpisodes:
-                printDetail("\n%d/%d episode of %s[%s]" % (x, len(xmlEpisodes), series.name, series.tvdb_id))
+                printDetail("\n%d/%d episode of %s[%s]" \
+                    % (x, len(xmlEpisodes), series.name, series.tvdb_id))
                 x = x + 1
                 updateEpisode(xmlEpisode)
         printDetail("\nRetrieving info finished\n")

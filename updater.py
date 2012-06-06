@@ -1,14 +1,13 @@
-from config import API_KEY, MIRROR, REMOVE_OLD, \
-                PRINT_DETAIL, REMOVE_OLD_IMAGES, \
-                IMAGE_FOLDER, LAST_UPDATE
-from checkepisode.models import *
-from xml.etree import ElementTree as et
-from datetime import datetime
 import os
 import urllib
+from config import MIRROR, REMOVE_OLD_IMAGES, IMAGE_FOLDER, PRINT_DETAIL
+from checkepisode.models import *
+
 
 def printDetail(msg):
-    if PRINT_DETAIL: print msg
+    if PRINT_DETAIL:
+        print msg
+
 
 def getLanguage_id(lang):
     old = Language.query.filter_by(caption=lang).first()
@@ -17,7 +16,8 @@ def getLanguage_id(lang):
     new = Language(lang)
     db.session.add(new)
     return new
-    
+
+
 def getGenre_id(genre):
     old = Genre.query.filter_by(caption=genre).first()
     if old:
@@ -26,7 +26,8 @@ def getGenre_id(genre):
     db.session.add(new)
     db.session.commit()
     return new
-    
+
+
 def getNetwork_id(network):
     old = Network.query.filter_by(caption=network).first()
     if old:
@@ -35,7 +36,8 @@ def getNetwork_id(network):
     db.session.add(new)
     db.session.commit()
     return new
-    
+
+
 def getStatus_id(status):
     old = Status.query.filter_by(caption=status).first()
     if old:
@@ -44,14 +46,16 @@ def getStatus_id(status):
     db.session.add(new)
     db.session.commit()
     return new
-    
+
+
 def getGenres(genre):
     genres = []
     for gen in genre.split('|'):
         if gen:
             genres.append(getGenre_id(gen))
     return genres
-    
+
+
 def updateSeries(series, xmlSeries):
     if series and xmlSeries is not None:
         printDetail("- - - - - - - - - - - - - - - - - - -")
@@ -141,7 +145,8 @@ def updateSeries(series, xmlSeries):
                 os.remove(image_file)
             if not os.path.isfile(image_file):
                 printDetail("Downloading banner")
-                urllib.urlretrieve('%sbanners/%s' % (MIRROR, banner), image_file)
+                urllib.urlretrieve('%sbanners/%s' \
+                    % (MIRROR, banner), image_file)
         # = = =
         poster = xmlSeries.findtext("poster")
         if poster:
@@ -157,10 +162,12 @@ def updateSeries(series, xmlSeries):
                 os.remove(image_file)
             if not os.path.isfile(image_file):
                 printDetail("Downloading poster")
-                urllib.urlretrieve('%sbanners/%s' % (MIRROR, poster), image_file)
+                urllib.urlretrieve('%sbanners/%s' \
+                    % (MIRROR, poster), image_file)
         # -----------------------
         printDetail("- - - - - - - - - - - - - - - - - - -")
-    
+
+
 def getEpisode(epID, serID):
     old = Episode.query.filter_by(tvdb_id=epID).first()
     if old:
@@ -174,7 +181,8 @@ def getEpisode(epID, serID):
         return new
     else:
         return None
-            
+
+
 def updateEpisode(xmlEpisode):
     if xmlEpisode is not None:
         epID = xmlEpisode.findtext("id")
@@ -240,7 +248,8 @@ def updateEpisode(xmlEpisode):
                         os.remove(image_file)
                     if not os.path.isfile(image_file):
                         printDetail("Downloading graphic")
-                        urllib.urlretrieve('%sbanners/%s' % (MIRROR, graphic), image_file)
+                        urllib.urlretrieve('%sbanners/%s' \
+                            % (MIRROR, graphic), image_file)
                 # -----------------------
             else:
                 printDetail("Episode's series not in database")
