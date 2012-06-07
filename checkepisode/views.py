@@ -58,7 +58,7 @@ def page_not_found(error):
 @app.route('/')
 def index():
     if current_user.is_authenticated():
-        return redirect(url_for('watchlist'))
+        return redirect(url_for('listing'))
     t = date.today() - timedelta(days=7)
     episodes = Episode.query.filter(Episode.air_time >= t.strftime('%Y%m%d'))\
         .order_by(Episode.air_time)
@@ -66,9 +66,9 @@ def index():
         today=datetime.now())
 
 
-@app.route('/watchlist')
+@app.route('/listing')
 @login_required
-def watchlist():
+def listing():
     create_token()
     episodes = Episode.query.filter(Episode.series_id.in_( \
         x.id for x in current_user.favorite_series)).\
@@ -84,7 +84,7 @@ def watchlist():
             aired_eps.append(e)
         else:
             upcoming_eps.append(e)
-    return render_template('watchlist.html', aired_eps=aired_eps, \
+    return render_template('listing.html', aired_eps=aired_eps, \
         upcoming_eps=upcoming_eps, today=datetime.now())
 
 
