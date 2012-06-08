@@ -172,10 +172,10 @@ def getEpisode(epID, serID):
     old = Episode.query.filter_by(tvdb_id=epID).first()
     if old:
         return old
-    series = Series.query.filter_by(tvdb_id=serID).first()
+    series = Serie.query.filter_by(tvdb_id=serID).first()
     if series:
         new = Episode(epID)
-        new.series = series
+        new.serie = series
         db.session.add(new)
         db.session.commit()
         return new

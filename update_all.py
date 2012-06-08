@@ -70,7 +70,7 @@ def getAllInfo(series):
                 updateEpisode(xmlEpisode)
         printDetail("\nRetrieving info finished\n")
 
-series = Series.query.all()
+series = Serie.query.all()
 print "Starting update_all - %s" % datetime.now().strftime('%H:%M %d-%m-%Y')
 print "Checking %d series\n" % len(series)
 for s in series:

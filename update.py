@@ -54,7 +54,7 @@ print "------------------------------------------------"
 print "Updating series"
 for s in series_updates:
     print "%d/%d series id = %s" % (x, len(series_updates), s.text)
-    series = Series.query.filter_by(tvdb_id=s.text).first()
+    series = Serie.query.filter_by(tvdb_id=s.text).first()
     if series:
         updateSeries(series, getSeriesXml(s.text))
     x = x + 1

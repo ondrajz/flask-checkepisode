@@ -26,7 +26,7 @@
             <tbody>
                 {% for ep in aired_eps %}
                     <tr>
-                        <td><a href="/series/{{ ep.series.id }}"><b>{{ ep.series.name }}</b></a></td>
+                        <td><a href="/series/{{ ep.serie.id }}"><b>{{ ep.serie.name }}</b></a></td>
                         <td>{{ ep.represent }}</td>
                         <td><a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
                         <td>
@@ -37,7 +37,7 @@
                         {% endif %}
                         </td>
                         <td>{{ date_string(ep.runtime) }}</td>
-                        <td><a href="http://thepiratebay.se/search/{{ ep.series.name|safe_url }} {{ ep.represent|safe_url }}/0/7/0"><img src="http://thepiratebay.se/favicon.ico"></a></td>
+                        <td><a href="http://thepiratebay.se/search/{{ ep.serie.name|safe_url }} {{ ep.represent|safe_url }}/0/7/0"><img src="http://thepiratebay.se/favicon.ico"></a></td>
                         <td style="padding: 0 8px;">
                             <form method="POST" action="{{ url_for('checkEpisode', id=ep.id ) }}" style="margin: 0;">
                                 <input type="hidden" name="token" value="{{ session['token'] }}">
@@ -71,7 +71,7 @@
             <tbody>
                 {% for ep in upcoming_eps %}
                     <tr>
-                        <td><a href="/series/{{ ep.series.id }}"><b>{{ ep.series.name }}</b></a></td>
+                        <td><a href="/series/{{ ep.serie.id }}"><b>{{ ep.serie.name }}</b></a></td>
                         <td>{{ ep.represent }}</td>
                         <td><a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
                         <td>

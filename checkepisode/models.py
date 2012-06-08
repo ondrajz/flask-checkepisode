@@ -1,11 +1,14 @@
 from checkepisode import db
 from datetime import datetime
 from flask.ext.security import UserMixin, RoleMixin
+from sqlalchemy.ext.associationproxy import association_proxy
 
-favorite_series = db.Table('favorite_series',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('series_id', db.Integer, db.ForeignKey('series.id'))
-)
+#favorite_series = db.Table('favorite_series',
+#    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+#    db.Column('series_id', db.Integer, db.ForeignKey('series.id')),
+#    db.Column('last_watched', db.DateTime)
+#)
+
 
 watched_episodes = db.Table('watched_episodes',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
@@ -14,7 +17,8 @@ watched_episodes = db.Table('watched_episodes',
 
 roles_users = db.Table('roles_users',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id')))
+    db.Column('role_id', db.Integer, db.ForeignKey('role.id'))
+)
 
 
 class Role(db.Model, RoleMixin):
@@ -34,10 +38,29 @@ class User(db.Model, UserMixin):
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
-    favorite_series = db.relationship('Series', secondary=favorite_series,
-        backref=db.backref('users', lazy='dynamic'))
+    #favorite_series = db.relationship('Series', secondary=favorite_series,
+    #    collection_class=attribute_mapped_collection('last_watched'),
+    #    backref=db.backref('users', lazy='dynamic'))
+    favorite_series = association_proxy('user_series', 'serie')
     watched_episodes = db.relationship('Episode', secondary=watched_episodes,
         backref=db.backref('users', lazy='dynamic'))
+
+
+class UserSerie(db.Model):
+    __tablename__ = 'user_serie'
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), \
+        primary_key=True)
+    serie_id = db.Column(db.Integer, db.ForeignKey('serie.id'), \
+        primary_key=True)
+    last_watched = db.Column(db.DateTime)
+    user = db.relationship("User", \
+        backref=db.backref("user_series", cascade="all, delete-orphan"))
+    serie = db.relationship("Serie")
+
+    def __init__(self, serie=None, user=None):
+        self.user = user
+        self.serie = serie
+        self.last_watched = datetime.now()
 
 
 class Language(db.Model):
@@ -64,7 +87,7 @@ class Network(db.Model):
         return '<Network %r>' % self.caption
 
 series_genres = db.Table('series_genres',
-    db.Column('series_id', db.Integer, db.ForeignKey('series.id')),
+    db.Column('series_id', db.Integer, db.ForeignKey('serie.id')),
     db.Column('genre_id', db.Integer, db.ForeignKey('genre.id'))
 )
 
@@ -93,8 +116,8 @@ class Status(db.Model):
         return '<Status %r>' % self.caption
 
 
-class Series(db.Model):
-    __tablename__ = 'series'
+class Serie(db.Model):
+    __tablename__ = 'serie'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
     tvdb_id = db.Column(db.Integer, unique=True)
@@ -126,7 +149,7 @@ class Series(db.Model):
         self.tvdb_id = tvdb_id
 
     def __repr__(self):
-        return '<Series %s>' % self.name
+        return '<Serie %s>' % self.name
 
 
 class Episode(db.Model):
@@ -134,7 +157,7 @@ class Episode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(90))
     tvdb_id = db.Column(db.Integer, unique=True, nullable=False)
-    series_id = db.Column(db.Integer, db.ForeignKey('series.id'))
+    serie_id = db.Column(db.Integer, db.ForeignKey('serie.id'))
     air_time = db.Column(db.String(8))
     seas_num = db.Column(db.Integer)
     epis_num = db.Column(db.Integer)
@@ -144,7 +167,7 @@ class Episode(db.Model):
     last_update = db.Column(db.Integer)
     graphic = db.Column(db.String(40))
 
-    series = db.relationship('Series',
+    serie = db.relationship('Serie',
         backref=db.backref('episodes', lazy='dynamic'))
 
     def __init__(self, epID):
@@ -157,7 +180,7 @@ class Episode(db.Model):
     def runtime(self):
         if not isinstance(self.air_time, unicode):
             return self.air_time
-        t = self.series.airs_time
+        t = self.serie.airs_time
         if t is None:
             t = '12:00AM'
         try:

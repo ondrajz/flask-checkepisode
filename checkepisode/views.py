@@ -70,7 +70,7 @@ def index():
 @login_required
 def listing():
     create_token()
-    episodes = Episode.query.filter(Episode.series_id.in_( \
+    episodes = Episode.query.filter(Episode.serie_id.in_( \
         x.id for x in current_user.favorite_series)).\
         filter(Episode.air_time != None).order_by(Episode.air_time)
     if episodes.count() <= 0:
@@ -91,14 +91,14 @@ def listing():
 @app.route('/series/<int:id>')
 def showSeries(id):
     create_token()
-    series = Series.query.get_or_404(id)
+    series = Serie.query.get_or_404(id)
     try:
         seasonCount = int(db.session.query(func.max(Episode.seas_num)).\
-            filter(Episode.series == series).scalar())
+            filter(Episode.serie == series).scalar())
     except:
         seasonCount = 0
     season = int(request.args.get('season', seasonCount))
-    season_list = Episode.query.filter_by(series=series, seas_num=season).all()
+    season_list = Episode.query.filter_by(serie=series, seas_num=season).all()
     if not series.last_update:
         flash('This show does not contain all informations. \
             It will be updated soon.', 'warning')
@@ -117,7 +117,7 @@ def showEpisode(id):
 @app.route('/series/<int:id>/check', methods=('GET', 'POST'))
 @login_required
 def checkSeries(id):
-    series = Series.query.get_or_404(id)
+    series = Serie.query.get_or_404(id)
 
     if request.method == 'GET':
         return redirect(url_for('showSeries', id=series.id))
@@ -164,6 +164,14 @@ def checkEpisode(id):
     else:
         current_user.watched_episodes.remove(episode)
         flash('Removed from watched!', 'success')
+
+    fav = UserSerie.query.\
+        filter_by(user=current_user, \
+        serie=episode.serie).first()
+    if fav is not None:
+        fav.last_watched = datetime.now()
+        db.session.add(fav)
+
     db.session.commit()
 
     if url is not None:
@@ -186,7 +194,7 @@ def addShow():
     if tvdb_id is None or name is None:
         return abort(404)
 
-    new = Series(name, tvdb_id)
+    new = Serie(name, tvdb_id)
     new.first_aired = first_aired.replace('-', '')
     new.overview = overview
     db.session.add(new)
@@ -211,7 +219,7 @@ def search():
     elif len(q) < 3:
         flash('Please enter at least 3 characters!', 'warning')
     else:
-        series = Series.query.filter(Series.name.like(\
+        series = Series.query.filter(Serie.name.like(\
             ('%s%s%s' % ('%', q, '%')))).all()
         if current_user.is_authenticated():
             found_series = searchFor(q)[:10]
@@ -222,9 +230,9 @@ def search():
 @app.route('/hot')
 def hotShows():
     create_token()
-    sub = db.session.query(favorite_series.c.series_id, func.count(\
-        favorite_series.c.user_id).label('count')).group_by(\
-        favorite_series.c.series_id).subquery()
-    shows = db.session.query(Series, sub.c.count).outerjoin(\
-        sub, Series.id == sub.c.series_id).order_by(db.desc('count'))
+    sub = db.session.query(UserSerie.serie_id, func.count(\
+        UserSerie.user_id).label('count')).group_by(\
+        UserSerie.serie_id).subquery()
+    shows = db.session.query(Serie, sub.c.count).outerjoin(\
+        sub, Serie.id == sub.c.serie_id).order_by(db.desc('count'))
     return render_template('hot.html', shows=shows, today=datetime.now())
