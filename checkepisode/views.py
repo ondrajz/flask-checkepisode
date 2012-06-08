@@ -1,7 +1,7 @@
 from checkepisode import app, create_token, validate_token
 from checkepisode.models import *
 from flask import abort, render_template, request, redirect, \
-    url_for, flash
+    url_for, flash, make_response
 from datetime import date, timedelta, datetime
 import urllib
 from sqlalchemy.sql import func
@@ -70,13 +70,37 @@ def index():
 @login_required
 def listing():
     create_token()
-    episodes = Episode.query.filter(Episode.serie_id.in_( \
-        x.id for x in current_user.favorite_series)).\
-        filter(Episode.air_time != None).order_by(Episode.air_time)
+    show = request.args.get('s', request.cookies.get('show', 'all'))
+    period = request.args.get('p', request.cookies.get('period', 'month'))
+
+    if show == 'watched':
+        episodes = Episode.query.\
+            filter(Episode.serie_id.in_(\
+                x.id for x in current_user.favorite_series)).\
+            filter(Episode.id.in_(\
+                x.id for x in current_user.watched_episodes)).\
+            filter(Episode.air_time != None).\
+            order_by(Episode.air_time)
+    elif show == 'unwatched':
+        episodes = Episode.query.\
+            filter(Episode.serie_id.in_(\
+                x.id for x in current_user.favorite_series)).\
+            filter(~Episode.id.in_(\
+                x.id for x in current_user.watched_episodes)).\
+            filter(Episode.air_time != None).\
+            order_by(Episode.air_time)
+    else:
+        episodes = Episode.query.\
+            filter(Episode.serie_id.in_(\
+                x.id for x in current_user.favorite_series)).\
+            filter(Episode.air_time != None).\
+            order_by(Episode.air_time)
+
     if episodes.count() <= 0:
         flash('You have no shows in your watchlist! \
             Add some of the popular ones or use search!', 'warning')
         return redirect(url_for('hotShows'))
+
     aired_eps = []
     upcoming_eps = []
     for e in episodes:
@@ -84,8 +108,11 @@ def listing():
             aired_eps.append(e)
         else:
             upcoming_eps.append(e)
-    return render_template('listing.html', aired_eps=aired_eps, \
-        upcoming_eps=upcoming_eps, today=datetime.now())
+    resp = make_response(render_template('listing.html', aired_eps=aired_eps, \
+        upcoming_eps=upcoming_eps, today=datetime.now(), show=show, period=period))
+    resp.set_cookie('show', show)
+    resp.set_cookie('period', period)
+    return resp
 
 
 @app.route('/series/<int:id>')
