@@ -3,13 +3,6 @@ from datetime import datetime
 from flask.ext.security import UserMixin, RoleMixin
 from sqlalchemy.ext.associationproxy import association_proxy
 
-#favorite_series = db.Table('favorite_series',
-#    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-#    db.Column('series_id', db.Integer, db.ForeignKey('series.id')),
-#    db.Column('last_watched', db.DateTime)
-#)
-
-
 watched_episodes = db.Table('watched_episodes',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('episode_id', db.Integer, db.ForeignKey('episode.id'))
@@ -38,9 +31,6 @@ class User(db.Model, UserMixin):
     confirmed_at = db.Column(db.DateTime())
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
-    #favorite_series = db.relationship('Series', secondary=favorite_series,
-    #    collection_class=attribute_mapped_collection('last_watched'),
-    #    backref=db.backref('users', lazy='dynamic'))
     favorite_series = association_proxy('user_series', 'serie')
     watched_episodes = db.relationship('Episode', secondary=watched_episodes,
         backref=db.backref('users', lazy='dynamic'))
