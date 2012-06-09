@@ -108,8 +108,9 @@ def listing():
             aired_eps.append(e)
         else:
             upcoming_eps.append(e)
-    resp = make_response(render_template('listing.html', aired_eps=aired_eps, \
-        upcoming_eps=upcoming_eps, today=datetime.now(), show=show, period=period))
+    resp = make_response(render_template('listing.html',\
+        aired_eps=aired_eps, upcoming_eps=upcoming_eps, \
+        today=datetime.now(), show=show, period=period))
     resp.set_cookie('show', show)
     resp.set_cookie('period', period)
     return resp

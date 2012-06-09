@@ -98,9 +98,11 @@ class Status(db.Model):
     __tablename__ = 'status'
     id = db.Column(db.Integer, primary_key=True)
     caption = db.Column(db.String(20), unique=True, nullable=False)
+    display = db.Column(db.String(20), unique=True, nullable=False)
 
     def __init__(self, caption):
         self.caption = caption
+        self.display = caption
 
     def __repr__(self):
         return '<Status %r>' % self.caption
