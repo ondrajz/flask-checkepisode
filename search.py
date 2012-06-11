@@ -5,7 +5,7 @@ from config import MIRROR
 
 
 def searchFor(name, all=False):
-    from checkepisode.models import Series
+    from checkepisode.models import Serie
     results = []
     filehandle = urllib.urlopen("%sapi/GetSeries.php?seriesname=%s" \
         % (MIRROR, urllib.quote(name)))
@@ -14,7 +14,7 @@ def searchFor(name, all=False):
     found_series = tvxml.findall('Series')
     for series in found_series:
         id = int(series.findtext('seriesid'))
-        if all or (not all and Series.query.filter_by(tvdb_id=id) \
+        if all or (not all and Serie.query.filter_by(tvdb_id=id) \
                 .count() == 0):
             name = series.findtext('SeriesName')
             first_aired = series.findtext('FirstAired')
