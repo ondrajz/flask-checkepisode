@@ -5,6 +5,7 @@ from flask import abort, render_template, request, redirect, \
 from datetime import date, timedelta, datetime
 import urllib
 from sqlalchemy.sql import func
+from sqlalchemy import desc
 from flask.ext.security import login_required, current_user
 from search import searchFor
 
@@ -116,6 +117,50 @@ def listing():
     return resp
 
 
+@app.route('/watchlist')
+@login_required
+def watchlist():
+    create_token()
+    episodes = Episode.query.subquery()
+    userseries = UserSerie.query.subquery()
+    # Get the min air time for each of the favorite series.
+    min_air_times = db.session.query(
+            Serie.id.label('serie_id'),
+            db.func.min(episodes.c.id).label('id')
+        ).filter(
+            Serie.id.in_(x.id for x in current_user.favorite_series)
+        ).outerjoin(
+            userseries,
+            Serie.id == userseries.c.serie_id
+        ).outerjoin(
+            episodes,
+            Serie.id == episodes.c.serie_id
+        ).filter(
+            ~episodes.c.id.in_(x.id for x in current_user.watched_episodes)
+        ).filter(
+            episodes.c.seas_num != 0
+        ).order_by(
+            desc(userseries.c.last_watched)
+        ).group_by(
+            Serie.id
+        ).subquery()
+    # Select the serie and episode.
+    shows = db.session.query(
+            Serie,
+            Episode
+        ).join(
+            Episode,
+            Episode.serie_id == Serie.id
+        ).join(
+            min_air_times,
+            db.and_(
+                min_air_times.c.serie_id == Serie.id,
+                min_air_times.c.id == Episode.id
+            )
+        ).all()
+    return render_template('watchlist.html', shows=shows, today=datetime.now())
+
+
 @app.route('/series/<int:id>')
 def showSeries(id):
     create_token()
@@ -190,8 +235,9 @@ def checkEpisode(id):
             current_user.watched_episodes.append(episode)
             flash('Added to watched!', 'success')
     else:
-        current_user.watched_episodes.remove(episode)
-        flash('Removed from watched!', 'success')
+        if episode in current_user.watched_episodes:
+            current_user.watched_episodes.remove(episode)
+            flash('Removed from watched!', 'success')
 
     fav = UserSerie.query.\
         filter_by(user=current_user, \
@@ -247,7 +293,7 @@ def search():
     elif len(q) < 3:
         flash('Please enter at least 3 characters!', 'warning')
     else:
-        series = Series.query.filter(Serie.name.like(\
+        series = Serie.query.filter(Serie.name.like(\
             ('%s%s%s' % ('%', q, '%')))).all()
         if current_user.is_authenticated():
             found_series = searchFor(q)[:10]

@@ -81,6 +81,7 @@
                     <div class="nav-collapse">
                         <ul class="nav">
                             {% if current_user and current_user.is_authenticated() %}
+                            <li {% if active_page == "watchlist" %}class="active"{% endif %}><a href="/watchlist">Watchlist</a></li>
                             <li {% if active_page == "listing" %}class="active"{% endif %}><a href="/listing">Listing</a></li>
                             {% endif %}
                             <li {% if active_page == "hot" %}class="active"{% endif %}><a href="/hot">Hot shows</a></li>

@@ -5,88 +5,39 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="span12">
-        <legend>
-            Aired episodes
-        </legend>
-        <header class="jumbotron subhead">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Series</th>
-                    <th>Number</th>
-                    <th>Episode name</th>
-                    <th>Time</th>
-                    <th>Air time</th>
-                    <th>Search</th>
-                    <th>Watched</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ep in aired_eps %}
-                    <tr>
-                        <td><a href="/series/{{ ep.series.id }}"><b>{{ ep.series.name }}</b></a></td>
-                        <td>{{ ep.represent }}</td>
-                        <td><a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
-                        <td>
-                        {% if ep.air_time %}
-                            <span style="margin-left: 0;" class="label label-success">{{ ep.runtime|friendly_time }}</span>
-                        {% else %}
-                            Unknown
-                        {% endif %}
-                        </td>
-                        <td>{{ date_string(ep.runtime) }}</td>
-                        <td><a href="http://thepiratebay.se/search/{{ ep.series.name|safe_url }} {{ ep.represent|safe_url }}/0/7/0"><img src="http://thepiratebay.se/favicon.ico"></a></td>
-                        <td style="padding: 0 8px;">
-                            <form method="POST" action="{{ url_for('checkEpisode', id=ep.id ) }}" style="margin: 0;">
-                                <input type="hidden" name="token" value="{{ session['token'] }}">
-                                <input type="checkbox" name="add" value="1" style="display: none;"{% if not ep in current_user.watched_episodes %}checked="true"{% endif %}>
-                                <input style="margin: 0;" alt="" type="image" {% if ep in current_user.watched_episodes %}class="new-checkbox-checked"{% else %}class="new-checkbox-unchecked"{% endif %}>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        </header>
+{% if shows|length == 0 %}
+    <div class="row">
+        <div class="span12">
+            <h1>You have no remaining episodes to watch!</h1>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="span12">
-        <legend>
-            Upcoming episodes
-        </legend>
-        <header class="jumbotron subhead">
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Series</th>
-                    <th>Number</th>
-                    <th>Episode name</th>
-                    <th>Time</th>
-                    <th>Air time</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ep in upcoming_eps %}
-                    <tr>
-                        <td><a href="/series/{{ ep.series.id }}"><b>{{ ep.series.name }}</b></a></td>
-                        <td>{{ ep.represent }}</td>
-                        <td><a href="/episode/{{ ep.id }}">{{ ep.name }}</a></td>
-                        <td>
-                        {% if ep.air_time %}
-                            <span style="margin-left: 0;" class="label label-warning">{{ ep.runtime|friendly_time }}</span>
-                        {% else %}
-                            Unknown
-                        {% endif %}
-                        </td>
-                        <td>{{ date_string(ep.runtime) }}</td>
-                    </tr>
+{% else %}
+    {% for r in range(0, shows|length, 6) %}
+        <div class="row">
+            <div class="span12">
+                <ul class="thumbnails">
+                {% for s in shows[r:r+6] %}
+                <li class="span2">
+                    <div class="thumbnail">
+                        <a class="thumbnail" href="/series/{{ s[0].id }}">
+                        <img alt="" src="/static/series/{{ s[0].poster }}">
+                        </a>
+                        <div class="caption" style="height: 32px;">
+                            <h5>{{ s[1].represent }}
+                            <div class="pull-right">
+                                <form method="POST" action="{{ url_for('checkEpisode', id=s[1].id ) }}" style="margin: 0;">
+                                    <input type="hidden" name="token" value="{{ session['token'] }}">
+                                    <input type="checkbox" name="add" value="1" style="display: none;" checked="true">
+                                    <input style="margin: 0;" alt="" type="image" class="new-checkbox-unchecked">
+                                </form>
+                            </div></h5>
+                        </div>
+                    </div>
+                </li>
                 {% endfor %}
-            </tbody>
-        </table>
-        </header>
-    </div>
-</div>
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
 {% endblock %}
