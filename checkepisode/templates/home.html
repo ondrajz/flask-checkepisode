@@ -1,40 +1,45 @@
 {% extends "base.html" %}
 
 {% block extrahead %}
+<style type="text/css">
+    body {
+        text-align: justify;
+        margin-top: 50px;
+        background: url("/static/img/background.png") no-repeat scroll center 100px white;
+        padding-top: 120px;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div style="width: 900px; margin: 0 auto;">
-    <div style="padding:30px">
+    <div style="padding:65px 0 0 70px; width: 230px;">
         <h1>
-            CheckEpisode.com
+            CheckEpisode
         </h1>
-
+        <br><br>
         <p>Keep track of your favorite tv series! Check episodes on <a href="http://checkepisode.com/">checkepisode.com</a></p>
 
     </div>
-    <div class="row">
-            <div class="span3">
-                <h2>Track</h2>
-                <p>
-                Track your favorite series, watch listings.
-                </p>
-            </div>
-            <div class="span3">
-                <h2>Search</h2>
-                <p>
-                Search link for episodes as a nice shortcut.
-                </p>
-            </div>
-            <div class="span3">
-                <h2>Check</h2>
-                <p>
-                Check and rate watched episodes.
-                </p>
-            </div>
+    <div class="row" style="margin: 310px 0 100px;">
+        <div class="span3">
+            <h2>Track</h2>
+            <p>
+            Track your favorite series, watch listings.
+            </p>
+        </div>
+        <div class="span3">
+            <h2>Search</h2>
+            <p>
+            Search link for episodes as a nice shortcut.
+            </p>
+        </div>
+        <div class="span3">
+            <h2>Check</h2>
+            <p>
+            Check and rate watched episodes.
+            </p>
+        </div>
     </div>
 </div>
-{% endblock %}
-
-{% block footer %}
 {% endblock %}
