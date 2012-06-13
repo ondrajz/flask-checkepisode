@@ -1,7 +1,13 @@
 from checkepisode import app, create_token, validate_token
 from checkepisode.models import *
-from flask import abort, render_template, request, redirect, \
-    url_for, flash, make_response
+from flask import (
+    abort,
+    render_template,
+    request, redirect,
+    url_for,
+    flash,
+    make_response
+)
 from datetime import date, timedelta, datetime
 import urllib
 from sqlalchemy.sql import func

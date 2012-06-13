@@ -2,8 +2,15 @@ from checkepisode import app
 from flask import current_app, redirect, url_for, \
     render_template, flash
 from flask.ext.security import LoginForm
-from flask.ext.wtf import Form, TextField, PasswordField, \
-     Required, EqualTo, Email, RecaptchaField
+from flask.ext.wtf import (
+    Form,
+    TextField,
+    PasswordField,
+    Required,
+    EqualTo,
+    Email,
+    RecaptchaField
+)
 from flask.ext.security.confirmable import send_confirmation_instructions
 
 
