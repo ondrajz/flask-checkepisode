@@ -73,12 +73,13 @@ def index():
         today=datetime.now())
 
 
-@app.route('/listing')
+@app.route('/listing/')
+@app.route('/listing/<show>')
 @login_required
-def listing():
+def listing(show=None):
     create_token()
-    show = request.args.get('s', request.cookies.get('show', 'all'))
-    period = request.args.get('p', request.cookies.get('period', 'month'))
+    if show is None:
+        show = request.cookies.get('show', 'all')
 
     if show == 'watched':
         episodes = Episode.query.\
@@ -117,9 +118,8 @@ def listing():
             upcoming_eps.append(e)
     resp = make_response(render_template('listing.html',\
         aired_eps=aired_eps, upcoming_eps=upcoming_eps, \
-        today=datetime.now(), show=show, period=period))
+        today=datetime.now(), show=show))
     resp.set_cookie('show', show)
-    resp.set_cookie('period', period)
     return resp
 
 

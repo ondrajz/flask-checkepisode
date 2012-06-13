@@ -10,9 +10,9 @@
         <div class="page-header">
             <div class="btn-toolbar pull-right">
                 <div class="btn-group">
-                    <a href="{{ url_for('listing') }}?s=all" class="btn{% if show == 'all' %} btn-success{% endif %}">{% if show == 'all' %}<i class="icon-ok icon-white"></i> {% endif %}All</a>
-                    <a href="{{ url_for('listing') }}?s=unwatched" class="btn{% if show == 'unwatched' %} btn-success{% endif %}">{% if show == 'unwatched' %}<i class="icon-ok icon-white"></i> {% endif %}Unwatched</a>
-                    <a href="{{ url_for('listing') }}?s=watched" class="btn{% if show == 'watched' %} btn-success{% endif %}">{% if show == 'watched' %}<i class="icon-ok icon-white"></i> {% endif %}Watched</a>
+                    <a href="{{ url_for('listing', show='all') }}" class="btn{% if show == 'all' %} btn-success{% endif %}">{% if show == 'all' %}<i class="icon-ok icon-white"></i> {% endif %}All</a>
+                    <a href="{{ url_for('listing', show='unwatched') }}" class="btn{% if show == 'unwatched' %} btn-success{% endif %}">{% if show == 'unwatched' %}<i class="icon-ok icon-white"></i> {% endif %}Unwatched</a>
+                    <a href="{{ url_for('listing', show='watched') }}" class="btn{% if show == 'watched' %} btn-success{% endif %}">{% if show == 'watched' %}<i class="icon-ok icon-white"></i> {% endif %}Watched</a>
                 </div>
             </div>
             <h2 style="line-height: 1;">Aired episodes</h2>
