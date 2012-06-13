@@ -67,8 +67,9 @@ def index():
     if current_user.is_authenticated():
         return redirect(url_for('listing'))
     t = date.today() - timedelta(days=7)
-    episodes = Episode.query.filter(Episode.air_time >= t.strftime('%Y%m%d'))\
-        .order_by(Episode.air_time)
+    episodes = Episode.query.filter(
+            Episode.air_time >= t.strftime('%Y%m%d')
+        ).order_by(Episode.air_time)
     return render_template('home.html', episodes=episodes, \
         today=datetime.now())
 
@@ -82,27 +83,32 @@ def listing(show=None):
         show = request.cookies.get('show', 'all')
 
     if show == 'watched':
-        episodes = Episode.query.\
-            filter(Episode.serie_id.in_(\
-                x.id for x in current_user.favorite_series)).\
-            filter(Episode.id.in_(\
-                x.id for x in current_user.watched_episodes)).\
-            filter(Episode.air_time != None).\
-            order_by(Episode.air_time)
+        episodes = Episode.query.filter(
+                Episode.serie_id.in_(
+                    x.id for x in current_user.favorite_series
+                ),
+                Episode.id.in_(
+                    x.id for x in current_user.watched_episodes
+                ),
+                Episode.air_time != None
+            ).order_by(Episode.air_time)
     elif show == 'unwatched':
-        episodes = Episode.query.\
-            filter(Episode.serie_id.in_(\
-                x.id for x in current_user.favorite_series)).\
-            filter(~Episode.id.in_(\
-                x.id for x in current_user.watched_episodes)).\
-            filter(Episode.air_time != None).\
-            order_by(Episode.air_time)
+        episodes = Episode.query.filter(
+                Episode.serie_id.in_(
+                    x.id for x in current_user.favorite_series
+                ),
+                ~Episode.id.in_(
+                    x.id for x in current_user.watched_episodes
+                ),
+                Episode.air_time != None
+            ).order_by(Episode.air_time)
     else:
-        episodes = Episode.query.\
-            filter(Episode.serie_id.in_(\
-                x.id for x in current_user.favorite_series)).\
-            filter(Episode.air_time != None).\
-            order_by(Episode.air_time)
+        episodes = Episode.query.filter(
+                Episode.serie_id.in_(
+                    x.id for x in current_user.favorite_series
+                ),
+                Episode.air_time != None
+            ).order_by(Episode.air_time)
 
     if episodes.count() <= 0:
         flash('You have no shows in your watchlist! \
