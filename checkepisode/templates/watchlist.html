@@ -23,14 +23,14 @@
                         <img alt="" src="/static/series/{{ s[0].poster }}">
                         </a>
                         <div class="caption" style="height: 32px;">
-                            <h5>{{ s[1].represent }}
+                            <h3>{{ s[1].represent }}
                             <div class="pull-right">
                                 <form method="POST" action="{{ url_for('checkEpisode', id=s[1].id ) }}" style="margin: 0;">
                                     <input type="hidden" name="token" value="{{ session['token'] }}">
                                     <input type="checkbox" name="add" value="1" style="display: none;" checked="true">
                                     <input style="margin: 0;" alt="" type="image" class="new-checkbox-unchecked">
                                 </form>
-                            </div></h5>
+                            </div></h3>
                         </div>
                     </div>
                 </li>
