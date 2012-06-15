@@ -5,7 +5,7 @@ from config import MIRROR
 
 
 def searchFor(name, all=False):
-    from checkepisode.models import Serie
+    from checkepisode.series import Serie
     results = []
     filehandle = urllib.urlopen("%sapi/GetSeries.php?seriesname=%s" \
         % (MIRROR, urllib.quote(name)))

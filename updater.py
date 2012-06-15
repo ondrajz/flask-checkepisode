@@ -1,7 +1,9 @@
 import os
 import urllib
+from checkepisode import db
 from config import MIRROR, REMOVE_OLD_IMAGES, IMAGE_FOLDER, PRINT_DETAIL
-from checkepisode.models import *
+from checkepisode.series import Serie, Language, Genre, Network, Status
+from checkepisode.episode import Episode
 
 
 def printDetail(msg):

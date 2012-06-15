@@ -1,7 +1,7 @@
 import urllib
 from xml.etree import ElementTree as et
 from datetime import datetime
-from checkepisode.models import *
+from checkepisode.series import Serie
 from updater import *
 from config import API_KEY, MIRROR, LAST_UPDATE
 

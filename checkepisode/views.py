@@ -1,9 +1,11 @@
-from checkepisode import app, create_token, validate_token
-from checkepisode.models import *
+from checkepisode import app, db, create_token, validate_token
+from checkepisode.episode import Episode
+from checkepisode.series import Serie, UserSerie
 from flask import (
     abort,
     render_template,
-    request, redirect,
+    request,
+    redirect,
     url_for,
     flash,
     make_response
@@ -174,99 +176,6 @@ def watchlist():
             )
         ).all()
     return render_template('watchlist.html', shows=shows, today=datetime.now())
-
-
-@app.route('/series/<int:id>')
-def showSeries(id):
-    create_token()
-    series = Serie.query.get_or_404(id)
-    try:
-        seasonCount = int(db.session.query(func.max(Episode.seas_num)).\
-            filter(Episode.serie == series).scalar())
-    except:
-        seasonCount = 0
-    season = int(request.args.get('season', seasonCount))
-    season_list = Episode.query.filter_by(serie=series, seas_num=season).all()
-    if not series.last_update:
-        flash('This show does not contain all informations. \
-            It will be updated soon.', 'warning')
-    return render_template('series/detail.html', series=series, \
-        seasonCount=seasonCount, season=season, season_list=season_list, \
-        today=today.strftime('%Y%m%d'))
-
-
-@app.route('/episode/<int:id>')
-def showEpisode(id):
-    create_token()
-    episode = Episode.query.get_or_404(id)
-    return render_template('episode/detail.html', episode=episode)
-
-
-@app.route('/series/<int:id>/check', methods=('GET', 'POST'))
-@login_required
-def checkSeries(id):
-    series = Serie.query.get_or_404(id)
-
-    if request.method == 'GET':
-        return redirect(url_for('showSeries', id=series.id))
-
-    url = request.referrer
-
-    if not validate_token():
-        return redirect(url_for('checkSeries', id=series.id))
-
-    add = request.form.get('add', None)
-    if add:
-        if series not in current_user.favorite_series:
-            current_user.favorite_series.append(series)
-            flash('Added to watchlist!', 'success')
-    else:
-        current_user.favorite_series.remove(series)
-        flash('Removed from watchlist!', 'success')
-    db.session.commit()
-
-    if url is not None:
-        return redirect(url)
-
-    return redirect(url_for('showSeries', id=series.id))
-
-
-@app.route('/episode/<int:id>/check', methods=('GET', 'POST'))
-@login_required
-def checkEpisode(id):
-    episode = Episode.query.get_or_404(id)
-
-    if request.method == 'GET':
-        return redirect(url_for('showEpisode', id=episode.id))
-
-    url = request.referrer
-
-    if not validate_token():
-        return redirect(url_for('checkEpisode', id=episode.id))
-
-    add = request.form.get('add', None)
-    if add:
-        if episode not in current_user.watched_episodes:
-            current_user.watched_episodes.append(episode)
-            flash('Added to watched!', 'success')
-    else:
-        if episode in current_user.watched_episodes:
-            current_user.watched_episodes.remove(episode)
-            flash('Removed from watched!', 'success')
-
-    fav = UserSerie.query.\
-        filter_by(user=current_user, \
-        serie=episode.serie).first()
-    if fav is not None:
-        fav.last_watched = datetime.now()
-        db.session.add(fav)
-
-    db.session.commit()
-
-    if url is not None:
-        return redirect(url)
-
-    return redirect(url_for('showEpisode', id=episode.id))
 
 
 @app.route('/request', methods=['POST'])

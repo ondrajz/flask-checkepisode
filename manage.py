@@ -1,6 +1,6 @@
 from flaskext.script import Manager
 from checkepisode import app, db
-from checkepisode.models import Serie
+from checkepisode.series import Serie
 import checkepisode
 
 manager = Manager(app)

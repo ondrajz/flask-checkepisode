@@ -4,7 +4,7 @@ import os
 from xml.etree import ElementTree as et
 from datetime import datetime
 from updater import *
-from checkepisode.models import *
+from checkepisode.series import Serie
 from config import API_KEY, MIRROR, REMOVE_OLD
 
 

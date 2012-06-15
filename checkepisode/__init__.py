@@ -10,7 +10,7 @@ app.config.from_object('config')
 app.secret_key = app.config['SECRET_KEY']
 
 db = SQLAlchemy(app)
-from models import User, Role
+from users import User, Role
 Security(app, SQLAlchemyUserDatastore(db, User, Role), registerable=False)
 
 app.mail = Mail(app)
@@ -30,7 +30,9 @@ def validate_token():
         return False
     return True
 
-import models
+import users
+import series
+import episode
 import friendly_time
 import login
 import views
