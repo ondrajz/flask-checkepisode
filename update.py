@@ -3,7 +3,7 @@ from xml.etree import ElementTree as et
 from datetime import datetime
 from checkepisode.series import Serie
 from updater import *
-from config import API_KEY, MIRROR, LAST_UPDATE
+from checkepisode.settings.external import API_KEY, MIRROR, LAST_UPDATE
 
 
 def getSeriesXml(serID):

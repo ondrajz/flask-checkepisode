@@ -1,7 +1,6 @@
 from xml.etree import ElementTree as et
 import urllib
-
-from config import MIRROR
+from checkepisode.settings.external import MIRROR
 
 
 def searchFor(name, all=False):

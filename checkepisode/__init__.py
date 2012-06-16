@@ -6,7 +6,8 @@ from flask.ext.security.datastore import SQLAlchemyUserDatastore
 import os
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object('checkepisode.settings.' +
+    os.environ.get('CHECKEPISODE_ENVIRONMENT', 'development'))
 app.secret_key = app.config['SECRET_KEY']
 
 db = SQLAlchemy(app)

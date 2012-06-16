@@ -5,7 +5,7 @@ from xml.etree import ElementTree as et
 from datetime import datetime
 from updater import *
 from checkepisode.series import Serie
-from config import API_KEY, MIRROR, REMOVE_OLD
+from checkepisode.settings.external import API_KEY, MIRROR, REMOVE_OLD
 
 
 def getInfoFile(ser_id):
