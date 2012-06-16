@@ -5,18 +5,18 @@ from xml.etree import ElementTree as et
 from datetime import datetime
 from updater import *
 from checkepisode.series import Serie
-from checkepisode.settings.external import API_KEY, MIRROR, REMOVE_OLD
+from checkepisode.settings.external import API_KEY, MIRROR,\
+    REMOVE_OLD, SERIES_ZIP
 
 
 def getInfoFile(ser_id):
-    d = '%s/seriesZip' % os.getcwd()
-    if not os.path.exists(d):
-        print "Creating %s" % d
-        os.makedirs(d)
+    if not os.path.exists(SERIES_ZIP):
+        print "Creating %s" % SERIES_ZIP
+        os.makedirs(SERIES_ZIP)
     if ser_id:
         printDetail("Checking zipfile for %s" % ser_id)
-        tvdbZip = "seriesZip/%s.zip" % ser_id
-        folder = "seriesZip/%s" % ser_id
+        tvdbZip = "%s/%s.zip" % (SERIES_ZIP, ser_id)
+        folder = "%s/%s" % (SERIES_ZIP, ser_id)
         info = "%s/en.xml" % folder
         if os.path.isfile(info) and REMOVE_OLD:
             print "Removing old files"
