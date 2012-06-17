@@ -94,7 +94,7 @@ class Serie(db.Model):
 
 
 class UserSerie(db.Model):
-    __tablename__ = 'user_serie'
+    __tablename__ = 'user_series'
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), \
         primary_key=True)
     serie_id = db.Column(db.Integer, db.ForeignKey('serie.id'), \
