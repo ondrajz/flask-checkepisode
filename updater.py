@@ -9,7 +9,7 @@ from checkepisode.episode import Episode
 
 def printDetail(msg):
     if PRINT_DETAIL:
-        print msg
+        print unicode(msg).encode("utf-8")
 
 
 def getLanguage_id(lang):
