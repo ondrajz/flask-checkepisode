@@ -18,7 +18,7 @@ SECURITY_CONFIRM_EMAIL = True
 SECURITY_EMAIL_SENDER = 'noreply@checkepisode.com'
 SECURITY_PASSWORD_HASH = 'bcrypt'
 
-LOG_FILE_PATH = 'log.log'
+LOG_FILE_PATH = os.environ['CHECKEPISODE_LOG_FILE_PATH']
 LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 del base
