@@ -115,7 +115,7 @@ def listing(show=None):
     if episodes.count() <= 0:
         flash('You have no shows in your watchlist! \
             Add some of the popular ones or use search!', 'warning')
-        return redirect(url_for('hotShows'))
+        return redirect(url_for('shows'))
 
     aired_eps = []
     upcoming_eps = []
@@ -225,12 +225,12 @@ def search():
         found_series=found_series)
 
 
-@app.route('/hot')
-def hotShows():
+@app.route('/shows')
+def shows():
     create_token()
     sub = db.session.query(UserSerie.serie_id, func.count(\
         UserSerie.user_id).label('count')).group_by(\
         UserSerie.serie_id).subquery()
     shows = db.session.query(Serie, sub.c.count).outerjoin(\
         sub, Serie.id == sub.c.serie_id).order_by(db.desc('count'))
-    return render_template('hot.html', shows=shows, today=datetime.now())
+    return render_template('shows.html', shows=shows, today=datetime.now())
