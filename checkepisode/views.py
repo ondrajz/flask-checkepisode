@@ -225,12 +225,44 @@ def search():
         found_series=found_series)
 
 
-@app.route('/shows')
-def shows():
+@app.route('/shows/')
+@app.route('/shows/<sort>')
+def shows(sort=None):
     create_token()
-    sub = db.session.query(UserSerie.serie_id, func.count(\
-        UserSerie.user_id).label('count')).group_by(\
-        UserSerie.serie_id).subquery()
-    shows = db.session.query(Serie, sub.c.count).outerjoin(\
-        sub, Serie.id == sub.c.serie_id).order_by(db.desc('count'))
-    return render_template('shows.html', shows=shows, today=datetime.now())
+    if sort is None:
+        sort = request.cookies.get('sort', 'fans')
+
+    if sort == 'name':
+        sub = db.session.query(UserSerie.serie_id, func.count(
+                    UserSerie.user_id).label('count')).group_by(
+                UserSerie.serie_id
+            ).subquery()
+        shows = db.session.query(Serie, sub.c.count).outerjoin(
+            sub, Serie.id == sub.c.serie_id
+            ).order_by(
+            Serie.name)
+    elif sort == 'first':
+        sub = db.session.query(UserSerie.serie_id, func.count(
+                    UserSerie.user_id).label('count')).group_by(
+                UserSerie.serie_id
+            ).subquery()
+        shows = db.session.query(Serie, sub.c.count).outerjoin(
+            sub, Serie.id == sub.c.serie_id
+            ).order_by(
+            db.desc(Serie.first_aired))
+    else:
+        sub = db.session.query(UserSerie.serie_id, func.count(
+                    UserSerie.user_id).label('count')).group_by(
+                UserSerie.serie_id
+            ).subquery()
+        shows = db.session.query(Serie, sub.c.count).outerjoin(
+                sub, Serie.id == sub.c.serie_id
+            ).order_by(db.desc('count'))
+
+    resp = make_response(render_template(
+        'shows.html',
+        shows=shows,
+        today=datetime.now(),
+        sort=sort))
+    resp.set_cookie('sort', sort)
+    return resp

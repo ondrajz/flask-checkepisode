@@ -6,27 +6,30 @@
 
 {% block content %}
 <div class="row">
-    <div style="width: 900px; margin: 0 auto;">
-
-        <ul class="thumbnails">
-        {% for s in shows[0:3] %}
-        <li class="span3">
-            <div class="thumbnail">
-                <a class="thumbnail" href="/series/{{ s[0].id }}">
-                <img alt="" src="/static/series/{{ s[0].poster }}">
-                </a>
-                <div class="caption">
-                    <h5>{{ s[0].name }}</h5>
-                <p>{{ s[1] }} fans</p>
-                </div>
-            </div>
-        </li>
-        {% endfor %}
-        </ul>
+    <div class="span12">
+    <div class="page-header">
+        <div class="btn-toolbar pull-right">
+            <table class="form-inline">
+                <tr>
+                <td>
+                    <label>Sort by:</label>
+                <td/><td>
+                    <div class="btn-group">
+                        <a href="{{ url_for('shows', sort='name') }}" class="btn{% if sort == 'name' %} btn-success{% endif %}">{% if sort == 'name' %}<i class="icon-ok icon-white"></i> {% endif %}Name</a>
+                        <a href="{{ url_for('shows', sort='fans') }}" class="btn{% if sort == 'fans' %} btn-success{% endif %}">{% if sort == 'fans' %}<i class="icon-ok icon-white"></i> {% endif %}Fans</a>
+                        <a href="{{ url_for('shows', sort='first') }}" class="btn{% if sort == 'first' %} btn-success{% endif %}">{% if sort == 'first' %}<i class="icon-ok icon-white"></i> {% endif %}First aired</a>
+                    </div>
+                <td>
+                </tr>
+            </table>
+        </div>
+        <h2 style="line-height: 1;">Shows</h2>
+    </div>
     </div>
 </div>
+{% for r in range(0, shows.count(), 6) %}
 <div class="row">
-    {% for s in shows[3:9] %}
+    {% for s in shows[r:r+6] %}
         <div class="span2">
             <div class="thumbnail">
                 <a class="thumbnail" href="/series/{{ s[0].id }}">
@@ -40,20 +43,5 @@
         </div>
     {% endfor %}
 </div>
-<br>
-<div class="row">
-    {% for s in shows[9:15] %}
-        <div class="span2">
-            <div class="thumbnail">
-                <a class="thumbnail" href="/series/{{ s[0].id }}">
-                <img alt="" src="/static/series/{{ s[0].poster }}">
-                </a>
-                <div class="caption">
-                    <h5>{{ s[0].name }}</h5>
-                <p>{{ s[1] }} fans</p>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
-</div>
+{% endfor %}
 {% endblock %}
