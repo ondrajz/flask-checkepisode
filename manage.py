@@ -1,6 +1,7 @@
 from flaskext.script import Manager
 from checkepisode import app, db
 from checkepisode.series import Serie
+from checkepisode.users import Role
 import checkepisode
 
 manager = Manager(app)
@@ -14,6 +15,15 @@ def dropdb():
 @manager.command
 def createdb():
     db.create_all()
+
+
+@manager.command
+def addroles():
+    a = Role(name='admin')
+    u = Role(name='user')
+    db.session.add(a)
+    db.session.add(u)
+    db.commit()
 
 
 @manager.command
