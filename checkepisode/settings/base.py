@@ -15,7 +15,7 @@ RECAPTCHA_PRIVATE_KEY = os.environ['CHECKEPISODE_RECAPTCHA_PRIVATE_KEY']
 RECAPTCHA_OPTIONS = {'theme': 'white'}
 
 SECURITY_CONFIRM_EMAIL = True
-SECURITY_EMAIL_SENDER = 'noreply@checkepisode.com'
+SECURITY_EMAIL_SENDER = ('CheckEpisode.com', 'noreply@checkepisode.com')
 SECURITY_PASSWORD_HASH = 'bcrypt'
 
 LOG_FILE_PATH = os.environ['CHECKEPISODE_LOG_FILE_PATH']
