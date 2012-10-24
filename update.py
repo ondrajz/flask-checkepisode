@@ -412,7 +412,7 @@ def periodic():
         x = x + 1
 
     logging.info("\nUpdating finished\nupdate time = %s\n%s", new_update,
-        "================================================\n")
+        "================================================")
     updFile = open(LAST_UPDATE, 'w+')
     updFile.write(new_update)
     updFile.close()
