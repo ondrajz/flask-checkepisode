@@ -388,7 +388,7 @@ def periodic():
     series_updates = tvxml.findall('Series')
     episode_updates = tvxml.findall('Episode')
 
-    logging.info("%d series updates\n%d episode updates%s",
+    logging.info("%d series updates\n%d episode updates",
         len(series_updates), len(episode_updates))
 
     x = 1
@@ -411,7 +411,8 @@ def periodic():
         updateEpisode(getEpisodeXml(e.text))
         x = x + 1
 
-    logging.info("\nUpdating finished\nupdate time = %s", new_update)
+    logging.info("\nUpdating finished\nupdate time = %s\n%s", new_update,
+        "================================================\n")
     updFile = open(LAST_UPDATE, 'w+')
     updFile.write(new_update)
     updFile.close()
