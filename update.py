@@ -411,7 +411,7 @@ def periodic():
         updateEpisode(getEpisodeXml(e.text))
         x = x + 1
 
-    logging.info("\nUpdating finished\nupdate time = %s\n%s", new_update,
+    logging.info("Updating finished\nupdate time = %s\n%s", new_update,
         "================================================")
     updFile = open(LAST_UPDATE, 'w+')
     updFile.write(new_update)
