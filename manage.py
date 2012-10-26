@@ -23,7 +23,7 @@ def addroles():
     u = Role(name='user')
     db.session.add(a)
     db.session.add(u)
-    db.commit()
+    db.session.commit()
 
 
 @manager.command
