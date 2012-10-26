@@ -12,7 +12,7 @@ app.secret_key = app.config['SECRET_KEY']
 
 db = SQLAlchemy(app)
 from users import User, Role
-Security(app, SQLAlchemyUserDatastore(db, User, Role), registerable=False)
+Security(app, SQLAlchemyUserDatastore(db, User, Role))
 
 app.mail = Mail(app)
 
